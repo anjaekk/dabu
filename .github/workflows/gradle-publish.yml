@@ -53,9 +53,9 @@ jobs:
     - name: Docker build & push to docker repo
       run: |
            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-           # docker build -t bside-17-2-back:latest .
-           docker tag bside-17-2-back:latest ${{ secrets.DOCKER_USERNAME }}/bside-17-2-back:latest
-           docker push ${{ secrets.DOCKER_USERNAME }}/bside-17-2-back:latest
+           docker build -t bside-17-2-back .
+           # docker tag bside-17-2-back:latest ${{ secrets.DOCKER_USERNAME }}/bside-17-2-back:latest
+           docker push ${{ secrets.DOCKER_USERNAME }}/bside-17-2-back
            # docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }}/bside-17-2-back .
            # docker push ${{ secrets.DOCKER_REPO }}/bside-17-2-back
 
