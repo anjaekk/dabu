@@ -54,7 +54,10 @@ public class CustomOauthService extends DefaultOAuth2UserService{
         if ("kakao".equals(registrationId)) {
             return OauthProvider.KAKAO;
         }
-        return null;
+        else if ("google".equals(registrationId)) {
+            return OauthProvider.GOOGLE;
+        }
+        throw new IllegalArgumentException("지원하지 않는 인증수단 입니다.");
     }
 
     private Member getMember(OauthAttributes attributes, OauthProvider oauthProvider) {

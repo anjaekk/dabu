@@ -24,13 +24,20 @@ public class OauthAttributes {
         if (oauthProvider == OauthProvider.KAKAO) {
             return ofKakao(userNameAttributeName, attributes);
         }
-        return null;
+        return ofGoogle(userNameAttributeName, attributes);
     }
 
     private static OauthAttributes ofKakao(String userNameAttributeName, Map<String, Object> attributes) {
         return OauthAttributes.builder()
                 .nameAttributeKey(userNameAttributeName)
                 .oauth2UserInfo(new Oauth2UserInfoKakao(attributes))
+                .build();
+    }
+
+    private static OauthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
+        return OauthAttributes.builder()
+                .nameAttributeKey(userNameAttributeName)
+                .oauth2UserInfo(new Oauth2UserInfoGoogle(attributes))
                 .build();
     }
 
