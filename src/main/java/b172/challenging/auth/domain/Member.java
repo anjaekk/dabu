@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "member")
+@Table(name = "member", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"oauth_provider", "oauth_id"})
+})
 @NoArgsConstructor
 public class Member {
 
@@ -19,10 +21,10 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private OauthProvider oauthProvider;
 
-    @Column(name = "oauth_id", nullable = false, length = 128, unique = true)
+    @Column(name = "oauth_id", nullable = false, length = 128)
     private String oauthId;
 
-    @Column(nullable = true, length = 20, unique = true)
+    @Column(nullable = false, length = 30)
     private String nickname;
 
     @Builder
