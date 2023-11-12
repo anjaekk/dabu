@@ -27,11 +27,18 @@ public class Member {
     @Column(nullable = false, length = 30)
     private String nickname;
 
+    @Column(length = 30)
+    private String jwtCode;
+
     @Builder
     public Member(Long id, OauthProvider oauthProvider, String oauthId, String nickname) {
         this.id = id;
         this.oauthProvider = oauthProvider;
         this.oauthId = oauthId;
         this.nickname = nickname;
+    }
+
+    public void updateJwtCode(String updateJwtCode) {
+        this.jwtCode = updateJwtCode;
     }
 }

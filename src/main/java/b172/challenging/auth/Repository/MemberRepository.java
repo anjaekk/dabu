@@ -5,6 +5,7 @@ import b172.challenging.auth.domain.OauthProvider;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +34,16 @@ public class MemberRepository {
                 .setParameter("oauthProvider", oauthProvider)
                 .getResultList();
         return resultList.isEmpty() ? Optional.empty() : Optional.of(resultList.get(0));
+    }
+
+    public Optional<Member> findById(Long id) {
+        Member member = em.find(Member.class, id);
+        return Optional.ofNullable(member);
+    }
+
+    public Optional<String> findJwtCodeById(Long id) {
+        Member member = em.find(Member.class, id);
+        return Optional.ofNullable(member != null ? member.getJwtCode() : null);
     }
 
 }

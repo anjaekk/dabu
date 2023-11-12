@@ -1,21 +1,29 @@
 package b172.challenging.auth.service;
 
+import b172.challenging.auth.Repository.MemberRepository;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.Claim;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.security.Key;
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Optional;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Getter
 public class JwtService {
 
@@ -37,23 +45,44 @@ public class JwtService {
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
     private static final String MEMBER_ID_CLAIM = "memberId";
+    private static final String CODE_CLAIM = "code";
     private static final String BEARER = "Bearer ";
 
+    private final MemberRepository memberRepository;
 
-    public String createAccessToken(Long id) {
+    public String createAccessToken(Long memberId) {
         Date now = new Date();
+        String jwtCode = generateJwtCode();
+        updateJwtCode(memberId, jwtCode);
         return JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(now.getTime() + accessTokenExpiration))
-                .withClaim(MEMBER_ID_CLAIM, id)
+                .withClaim(MEMBER_ID_CLAIM, memberId)
+                .withClaim(CODE_CLAIM, jwtCode)
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
-    public String createRefreshToken() {
+    public void updateJwtCode(Long id, String jwtCode) {
+        memberRepository.findById(id)
+                .ifPresentOrElse(
+                        user -> user.updateJwtCode(jwtCode),
+                        () -> {
+                            throw new RuntimeException("ID와 일치하는 회원이 없습니다.");
+                        }
+                );
+    }
+
+    public String createRefreshToken(Long memberId) {
         Date now = new Date();
+
+        Optional<String> jwtCodeOptional = memberRepository.findJwtCodeById(memberId);
+        String jwtCode = jwtCodeOptional.orElseThrow(
+                () -> new RuntimeException("jwtCode가 존재하지 않습니다."));
+
         return JWT.create()
                 .withSubject(REFRESH_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(now.getTime() + refreshTokenExpiration))
+                .withClaim(CODE_CLAIM, jwtCode)
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
@@ -68,22 +97,39 @@ public class JwtService {
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
+    public Optional<String> extractRefreshToken(HttpServletRequest request) {
+        return Optional.ofNullable(request.getHeader(refreshHeader));
+    }
+
     public Optional<String> extractAccessToken(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader(accessHeader))
                 .filter(refreshToken -> refreshToken.startsWith(BEARER))
                 .map(refreshToken -> refreshToken.replace(BEARER, ""));
     }
 
-    public Optional<Long> extractMemberId(String accessToken, HttpServletResponse response) {
-        try {
-            return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
+
+    public Long extractMemberId(String token) throws Exception {
+        Claim memberIdClaim = JWT.require(Algorithm.HMAC512(secretKey))
                     .build()
-                    .verify(accessToken)
-                    .getClaim(MEMBER_ID_CLAIM)
-                    .asLong());
-        } catch (Exception e) {
-            return Optional.empty();
+                    .verify(token)
+                    .getClaim(MEMBER_ID_CLAIM);
+
+        if (memberIdClaim.isNull()) {
+            throw new Exception("사용자 정보를 찾을 수 없습니다.");
         }
+        return memberIdClaim.asLong();
+    }
+
+    public String extractJwtCode(String token) throws Exception{
+        Claim CodeClaim = JWT.require(Algorithm.HMAC512(secretKey))
+                .build()
+                .verify(token)
+                .getClaim(CODE_CLAIM);
+
+        if (CodeClaim.isNull()) {
+            throw new Exception("사용자 정보를 찾을 수 없습니다.");
+        }
+        return CodeClaim.asString();
     }
 
     public boolean verifyToken(String token) {
@@ -94,5 +140,11 @@ public class JwtService {
             log.error("유효하지 않은 토큰입니다. {}", e.getMessage());
             return false;
         }
+    }
+
+    public String generateJwtCode() {
+        byte[] randomBytes = new byte[20];
+        new SecureRandom().nextBytes(randomBytes);
+        return Base64.getEncoder().encodeToString(randomBytes);
     }
 }
