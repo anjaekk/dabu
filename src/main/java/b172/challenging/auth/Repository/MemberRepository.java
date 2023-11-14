@@ -46,4 +46,9 @@ public class MemberRepository {
         return Optional.ofNullable(member != null ? member.getJwtCode() : null);
     }
 
+    @Transactional
+    public void updateJwtCode(Long memberId, String jwtCode) {
+        Member member = em.find(Member.class, memberId);
+        member.setJwtCode(jwtCode);
+    }
 }

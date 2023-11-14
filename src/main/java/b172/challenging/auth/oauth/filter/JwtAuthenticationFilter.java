@@ -3,14 +3,19 @@ package b172.challenging.auth.oauth.filter;
 import b172.challenging.auth.Repository.MemberRepository;
 import b172.challenging.auth.domain.Member;
 import b172.challenging.auth.service.JwtService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -37,7 +42,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String refreshToken = jwtService.extractRefreshToken(request)
                 .filter(jwtService::verifyToken)
                 .orElse(null);
-
         /**
          * refresh token 전송시 access, refresh token 모두 재발급
          */
@@ -49,6 +53,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             return;
         }
+
+        if (refreshToken == null) {
+            checkAccessTokenAndAuthentication(request, response, filterChain);
+        }
+
     }
 
     public void checkRefreshTokenAndReIssueTokens(HttpServletResponse response, String refreshToken) throws Exception {
@@ -70,5 +79,44 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         jwtService.sendAccessAndRefreshToken(
                 response, jwtService.createAccessToken(memberId), jwtService.createRefreshToken(memberId)
         );
+    }
+
+    public void checkAccessTokenAndAuthentication(
+            HttpServletRequest request, HttpServletResponse response, FilterChain filterChain
+    ) throws ServletException, IOException {
+        jwtService.extractAccessToken(request)
+                .filter(jwtService::verifyToken)
+                .ifPresent(accessToken -> {
+                    try {
+                        Long memberId = jwtService.extractMemberId(accessToken);
+                        String jwtCode = jwtService.extractJwtCode(accessToken);
+                        verifyJwtCodeAndAuthenticate(memberId, jwtCode);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+        filterChain.doFilter(request, response);
+    }
+
+    public void verifyJwtCodeAndAuthenticate(Long memberId, String jwtCode) {
+        memberRepository.findJwtCodeById(memberId)
+                .filter(savedJwtCode -> savedJwtCode.equals(jwtCode))
+                .ifPresentOrElse(
+                        savedJwtCode -> {
+                            Member member = memberRepository.findById(memberId)
+                                    .orElseThrow(() -> new EntityNotFoundException(
+                                            "사용자 ID: " + memberId + "를 찾을 수 없습니다."
+                                            )
+                                    );
+
+                            Authentication authentication =
+                                    new UsernamePasswordAuthenticationToken(member, null);
+
+                            SecurityContextHolder.getContext().setAuthentication(authentication);
+                        },
+                        () -> {
+                            throw new BadCredentialsException("JWT 코드가 일치하지 않습니다.");
+                        }
+                );
     }
 }

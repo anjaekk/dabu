@@ -38,7 +38,7 @@ public class Member {
         this.nickname = nickname;
     }
 
-    public void updateJwtCode(String updateJwtCode) {
-        this.jwtCode = updateJwtCode;
+    public void setJwtCode(String jwtCode) {
+        this.jwtCode = jwtCode;
     }
 }

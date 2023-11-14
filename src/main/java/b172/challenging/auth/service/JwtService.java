@@ -6,16 +6,12 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Date;
@@ -23,23 +19,23 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-@AllArgsConstructor
 @Getter
+@RequiredArgsConstructor
 public class JwtService {
 
-    @Value("${jwt.secretKey}")
+    @Value("${spring.jwt.secretKey}")
     private String secretKey;
 
-    @Value("${jwt.access.expiration-in-ms}")
+    @Value("${spring.jwt.access.expiration-in-ms}")
     private Long accessTokenExpiration;
 
-    @Value("${jwt.refresh.expiration-in-ms}")
+    @Value("${spring.jwt.refresh.expiration-in-ms}")
     private Long refreshTokenExpiration;
 
-    @Value("${jwt.access.header}")
+    @Value("${spring.jwt.access.header}")
     private String accessHeader;
 
-    @Value("${jwt.refresh.header}")
+    @Value("${spring.jwt.refresh.header}")
     private String refreshHeader;
 
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
@@ -62,22 +58,12 @@ public class JwtService {
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
-    public void updateJwtCode(Long id, String jwtCode) {
-        memberRepository.findById(id)
-                .ifPresentOrElse(
-                        user -> user.updateJwtCode(jwtCode),
-                        () -> {
-                            throw new RuntimeException("ID와 일치하는 회원이 없습니다.");
-                        }
-                );
-    }
 
     public String createRefreshToken(Long memberId) {
         Date now = new Date();
 
         Optional<String> jwtCodeOptional = memberRepository.findJwtCodeById(memberId);
-        String jwtCode = jwtCodeOptional.orElseThrow(
-                () -> new RuntimeException("jwtCode가 존재하지 않습니다."));
+        String jwtCode = jwtCodeOptional.orElseGet(this::generateJwtCode);
 
         return JWT.create()
                 .withSubject(REFRESH_TOKEN_SUBJECT)
@@ -86,10 +72,12 @@ public class JwtService {
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
+
     public void sendAccessToken(HttpServletResponse response, String accessToken) {
         response.setHeader(accessHeader, accessToken);
         response.setStatus(HttpServletResponse.SC_OK);
     }
+
 
     public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) {
         response.setHeader(accessHeader, accessToken);
@@ -97,9 +85,11 @@ public class JwtService {
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
+
     public Optional<String> extractRefreshToken(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader(refreshHeader));
     }
+
 
     public Optional<String> extractAccessToken(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader(accessHeader))
@@ -120,6 +110,7 @@ public class JwtService {
         return memberIdClaim.asLong();
     }
 
+
     public String extractJwtCode(String token) throws Exception{
         Claim CodeClaim = JWT.require(Algorithm.HMAC512(secretKey))
                 .build()
@@ -132,6 +123,7 @@ public class JwtService {
         return CodeClaim.asString();
     }
 
+
     public boolean verifyToken(String token) {
         try {
             JWT.require(Algorithm.HMAC512(secretKey)).build().verify(token);
@@ -141,6 +133,12 @@ public class JwtService {
             return false;
         }
     }
+
+
+    public void updateJwtCode(Long memberId, String jwtCode) {
+        memberRepository.findById(memberId).ifPresent(member -> memberRepository.updateJwtCode(memberId, jwtCode));
+    }
+
 
     public String generateJwtCode() {
         byte[] randomBytes = new byte[20];

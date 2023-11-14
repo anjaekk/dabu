@@ -1,33 +1,33 @@
 package b172.challenging.auth.config;
 
+import b172.challenging.auth.Repository.MemberRepository;
+import b172.challenging.auth.oauth.filter.JwtAuthenticationFilter;
+import b172.challenging.auth.oauth.handler.Oauth2LoginSuccessHandler;
 import b172.challenging.auth.service.CustomOauthService;
+import b172.challenging.auth.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.MediaType;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JwtService jwtService;
+    private final MemberRepository memberRepository;
     private final CustomOauthService customOauthService;
+    private final Oauth2LoginSuccessHandler oauth2LoginSuccessHandler;
 
     @Bean
     public WebSecurityCustomizer configureH2ConsoleEnable() {
@@ -53,11 +53,22 @@ public class SecurityConfig {
 //                        .anyRequest().authenticated()
                 )
                 .oauth2Login((oauth2) -> oauth2
+                        .successHandler(oauth2LoginSuccessHandler)
                         .userInfoEndpoint((userInfoEndpoint -> userInfoEndpoint
-                                .userService(customOauthService)))
-                        .defaultSuccessUrl("/login", true));
+                                .userService(customOauthService))));
 
         return http.build();
+
+
+    }
+    @Bean
+    public Oauth2LoginSuccessHandler loginSuccessHandler() {
+        return new Oauth2LoginSuccessHandler(jwtService, customOauthService);
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter(jwtService, memberRepository);
     }
 
 }
