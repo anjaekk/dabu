@@ -49,8 +49,11 @@ public class SecurityConfig {
                                 , new AntPathRequestMatcher("/favicon.ico")
                                 , new AntPathRequestMatcher("/login/**")
                                 , new AntPathRequestMatcher("/oauth/**")
-                                , new AntPathRequestMatcher("/h2-console/**")).permitAll()
-//                        .anyRequest().authenticated()
+                                , new AntPathRequestMatcher("/h2-console/**")
+                                , new AntPathRequestMatcher("/swagger-ui/**")
+                                , new AntPathRequestMatcher("/api-docs/**")
+                        ).permitAll()
+                        .anyRequest().authenticated()
                 )
                 .oauth2Login((oauth2) -> oauth2
                         .successHandler(oauth2LoginSuccessHandler)
