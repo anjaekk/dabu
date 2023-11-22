@@ -2,8 +2,11 @@ package b172.challenging.auth.oauth;
 
 import b172.challenging.auth.domain.Member;
 import b172.challenging.auth.domain.OauthProvider;
+import b172.challenging.auth.service.MemberService;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
@@ -13,10 +16,13 @@ public class OauthAttributes {
     private String nameAttributeKey;
     private Oauth2UserInfo oauth2UserInfo;
 
+    private final MemberService memberService;
+
     @Builder
-    public OauthAttributes(String nameAttributeKey, Oauth2UserInfo oauth2UserInfo) {
+    public OauthAttributes(String nameAttributeKey, Oauth2UserInfo oauth2UserInfo, MemberService memberService) {
         this.nameAttributeKey = nameAttributeKey;
         this.oauth2UserInfo = oauth2UserInfo;
+        this.memberService = memberService;
     }
 
     public static OauthAttributes of(OauthProvider oauthProvider,
@@ -41,11 +47,12 @@ public class OauthAttributes {
                 .build();
     }
 
-    public Member toEntity(OauthProvider oauthProvider, Oauth2UserInfo oauth2UserInfo) {
+    public Member toEntity(OauthProvider oauthProvider, Oauth2UserInfo oauth2UserInfo, MemberService memberService) {
+        String randomNickname = memberService.getRandomNickname();
         return Member.builder()
                 .oauthProvider(oauthProvider)
                 .oauthId(oauth2UserInfo.getId())
-                .nickname(oauth2UserInfo.getNickname())
+                .nickname(randomNickname)
                 .build();
     }
 }

@@ -24,7 +24,7 @@ public class Member {
     @Column(name = "oauth_id", nullable = false, length = 128)
     private String oauthId;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 30, unique = true)
     private String nickname;
 
     @Column(length = 30)

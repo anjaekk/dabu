@@ -10,7 +10,5 @@ public abstract class Oauth2UserInfo {
     }
 
     public abstract String getId();
-
-    public abstract String getNickname();
 }
 

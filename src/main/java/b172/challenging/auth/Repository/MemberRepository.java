@@ -25,6 +25,7 @@ public class MemberRepository {
         return member;
     }
 
+
     public Optional<Member> findOneByOauthProviderAndOauthId(OauthProvider oauthProvider, String oauthId) {
         List<Member> resultList = em.createQuery(
                 "select m from Member m where m.oauthId = :oauthId and m.oauthProvider = :oauthProvider",
@@ -36,19 +37,36 @@ public class MemberRepository {
         return resultList.isEmpty() ? Optional.empty() : Optional.of(resultList.get(0));
     }
 
+
     public Optional<Member> findById(Long id) {
         Member member = em.find(Member.class, id);
         return Optional.ofNullable(member);
     }
+
 
     public Optional<String> findJwtCodeById(Long id) {
         Member member = em.find(Member.class, id);
         return Optional.ofNullable(member != null ? member.getJwtCode() : null);
     }
 
+
+    public Optional<Member> findMemberByNickname(String nickname) {
+        String jpql = "SELECT m FROM Member m WHERE m.nickname = :nickname";
+        Member member = em.createQuery(jpql, Member.class)
+                .setParameter("nickname", nickname)
+                .getResultList()
+                .stream()
+                .findFirst()
+                .orElse(null);
+
+        return Optional.ofNullable(member);
+    }
+
+
     @Transactional
     public void updateJwtCode(Long memberId, String jwtCode) {
         Member member = em.find(Member.class, memberId);
         member.setJwtCode(jwtCode);
     }
+
 }
