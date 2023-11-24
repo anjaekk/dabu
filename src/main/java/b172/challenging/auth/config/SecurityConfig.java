@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Slf4j
@@ -59,6 +60,9 @@ public class SecurityConfig {
                         .successHandler(oauth2LoginSuccessHandler)
                         .userInfoEndpoint((userInfoEndpoint -> userInfoEndpoint
                                 .userService(customOauthService))));
+
+//        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+//                .addFilterAfter(loginSuccessHandler(), JwtAuthenticationFilter.class);
 
         return http.build();
 

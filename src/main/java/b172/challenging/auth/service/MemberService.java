@@ -70,7 +70,7 @@ public class MemberService {
 
 
     private boolean isNicknameExists(String nickname) {
-        Optional<Member> existingMember = memberRepository.findMemberByNickname(nickname);
+        Optional<Member> existingMember = memberRepository.findByNickname(nickname);
         return existingMember.isPresent();
     }
 }

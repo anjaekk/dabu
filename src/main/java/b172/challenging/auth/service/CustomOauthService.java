@@ -48,7 +48,6 @@ public class CustomOauthService extends DefaultOAuth2UserService{
 
         OauthAttributes extractAttributes = OauthAttributes.of(oauthProvider, userNameAttributeName, attributes);
         Member createdMember = getMember(extractAttributes, oauthProvider);
-
         return new CustomOauth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")), // security 기본 권한
                 attributes,
@@ -80,7 +79,7 @@ public class CustomOauthService extends DefaultOAuth2UserService{
     @Transactional
     public Member getMember(OauthAttributes attributes, OauthProvider oauthProvider) {
         Member findMember = memberRepository
-                .findOneByOauthProviderAndOauthId(oauthProvider
+                .findByOauthProviderAndOauthId(oauthProvider
                         , attributes.getOauth2UserInfo().getId()).orElse(null);
         if(findMember == null) {
             return saveMember(attributes, oauthProvider);

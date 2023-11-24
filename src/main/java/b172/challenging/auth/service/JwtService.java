@@ -1,6 +1,7 @@
 package b172.challenging.auth.service;
 
 import b172.challenging.auth.Repository.MemberRepository;
+import b172.challenging.auth.domain.Member;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
@@ -136,7 +137,10 @@ public class JwtService {
 
 
     public void updateJwtCode(Long memberId, String jwtCode) {
-        memberRepository.findById(memberId).ifPresent(member -> memberRepository.updateJwtCode(memberId, jwtCode));
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("Member를 찾을 수 없습니다. id: " + memberId));
+        member.setJwtCode(jwtCode);
+        memberRepository.save(member);
     }
 
 
