@@ -1,6 +1,7 @@
 package b172.challenging.auth.service;
 
 import b172.challenging.auth.Repository.MemberRepository;
+import b172.challenging.auth.domain.Member;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.util.Base64;
@@ -46,10 +48,11 @@ public class JwtService {
 
     private final MemberRepository memberRepository;
 
+
     public String createAccessToken(Long memberId) {
         Date now = new Date();
         String jwtCode = generateJwtCode();
-        updateJwtCode(memberId, jwtCode);
+        memberRepository.updateJwtCodeById(memberId, jwtCode);
         return JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(now.getTime() + accessTokenExpiration))
@@ -132,11 +135,6 @@ public class JwtService {
             log.error("유효하지 않은 토큰입니다. {}", e.getMessage());
             return false;
         }
-    }
-
-
-    public void updateJwtCode(Long memberId, String jwtCode) {
-        memberRepository.findById(memberId).ifPresent(member -> memberRepository.updateJwtCode(memberId, jwtCode));
     }
 
 
