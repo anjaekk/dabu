@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Table(name = "member", uniqueConstraints = {
@@ -30,9 +32,38 @@ public class Member {
     @Column(length = 30)
     private String jwtCode;
 
-    @Column(name = "role", nullable = false, length = 10)
+    @Column(nullable = false, length = 10)
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Column(name = "is_leaved", nullable = false)
+    private boolean isLeaved;
+
+    @Column(name = "birth_year")
+    private Long birthYear;
+
+    @Column(length = 10)
+    @Enumerated(EnumType.STRING)
+    private Sex sex;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Column(name = "leaved_at")
+    private LocalDateTime leavedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
     @Builder
     public Member(Long id, OauthProvider oauthProvider, String oauthId, String nickname) {
@@ -41,6 +72,7 @@ public class Member {
         this.oauthId = oauthId;
         this.nickname = nickname;
         this.role = Role.PENDING;
+        this.isLeaved = false;
     }
 
     public void setJwtCode(String jwtCode) {
