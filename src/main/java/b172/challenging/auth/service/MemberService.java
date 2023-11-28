@@ -1,5 +1,6 @@
 package b172.challenging.auth.service;
 
+import b172.challenging.auth.Repository.MemberCustomRepository;
 import b172.challenging.auth.Repository.MemberRepository;
 import b172.challenging.auth.domain.Member;
 import lombok.AllArgsConstructor;
