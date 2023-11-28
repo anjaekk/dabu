@@ -30,12 +30,17 @@ public class Member {
     @Column(length = 30)
     private String jwtCode;
 
+    @Column(name = "role", nullable = false, length = 10)
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @Builder
     public Member(Long id, OauthProvider oauthProvider, String oauthId, String nickname) {
         this.id = id;
         this.oauthProvider = oauthProvider;
         this.oauthId = oauthId;
         this.nickname = nickname;
+        this.role = Role.PENDING;
     }
 
     public void setJwtCode(String jwtCode) {
