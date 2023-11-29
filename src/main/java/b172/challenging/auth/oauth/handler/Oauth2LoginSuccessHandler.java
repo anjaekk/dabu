@@ -3,6 +3,7 @@ package b172.challenging.auth.oauth.handler;
 import b172.challenging.auth.Repository.MemberRepository;
 import b172.challenging.auth.domain.Member;
 import b172.challenging.auth.domain.OauthProvider;
+import b172.challenging.auth.domain.Role;
 import b172.challenging.auth.oauth.CustomOauth2User;
 import b172.challenging.auth.oauth.OauthAttributes;
 import b172.challenging.auth.service.CustomOauthService;
@@ -35,12 +36,16 @@ public class Oauth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(
             HttpServletRequest request, HttpServletResponse response, Authentication authentication
     ) throws IOException, ServletException {
-        CustomOauth2User oAuth2User = (CustomOauth2User) authentication.getPrincipal();
-
-        Long memberId = oAuth2User.getMemberId();
+        CustomOauth2User oauth2User = (CustomOauth2User) authentication.getPrincipal();
+        Long memberId = oauth2User.getMemberId();
 
         String accessToken = jwtService.createAccessToken(memberId);
         String refreshToken = jwtService.createRefreshToken(memberId);
-        jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
+        if (oauth2User.getRole() == Role.PENDING) {
+            response.addHeader(jwtService.getAccessHeader(), "Bearer" + accessToken);
+            response.sendRedirect("oauth/signup-form"); // FIXME: 추가 정보 입력창으로 redirect
+        } else {
+            jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
+        }
     }
 }

@@ -50,10 +50,11 @@ public class CustomOauthService extends DefaultOAuth2UserService{
         OauthAttributes extractAttributes = OauthAttributes.of(oauthProvider, userNameAttributeName, attributes);
         Member createdMember = getMember(extractAttributes, oauthProvider);
         return new CustomOauth2User(
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")), // security 기본 권한
+                Collections.singleton(new SimpleGrantedAuthority(createdMember.getRole().getKey())),
                 attributes,
                 userNameAttributeName,
-                createdMember.getId()
+                createdMember.getId(),
+                createdMember.getRole()
         );
     }
 
