@@ -1,5 +1,6 @@
 package b172.challenging.auth.domain;
 
+import b172.challenging.wallet.domain.Wallet;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_id")
     private Long id;
 
     @Column(name = "oauth_provider", nullable = false, length = 10)
@@ -54,6 +56,9 @@ public class Member {
 
     @Column(name = "leaved_at")
     private LocalDateTime leavedAt;
+
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+    private Wallet wallet;
 
     @PrePersist
     protected void onCreate() {
