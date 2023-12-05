@@ -2,6 +2,7 @@ package b172.challenging.auth.config;
 
 import b172.challenging.auth.Repository.MemberRepository;
 import b172.challenging.auth.oauth.filter.JwtAuthenticationFilter;
+import b172.challenging.auth.oauth.handler.Oauth2LoginFailureHandler;
 import b172.challenging.auth.oauth.handler.Oauth2LoginSuccessHandler;
 import b172.challenging.auth.service.CustomOauthService;
 import b172.challenging.auth.service.JwtService;
@@ -28,6 +29,8 @@ public class SecurityConfig {
     private final MemberRepository memberRepository;
     private final CustomOauthService customOauthService;
     private final Oauth2LoginSuccessHandler oauth2LoginSuccessHandler;
+    private final Oauth2LoginFailureHandler oauth2LoginFailureHandler;
+
 
     @Bean
     public WebSecurityCustomizer configureH2ConsoleEnable() {
@@ -58,6 +61,7 @@ public class SecurityConfig {
                 )
                 .oauth2Login((oauth2) -> oauth2
                         .successHandler(oauth2LoginSuccessHandler)
+                        .failureHandler(oauth2LoginFailureHandler)
                         .userInfoEndpoint((userInfoEndpoint -> userInfoEndpoint
                                 .userService(customOauthService))));
 
@@ -68,6 +72,11 @@ public class SecurityConfig {
     @Bean
     public Oauth2LoginSuccessHandler loginSuccessHandler() {
         return new Oauth2LoginSuccessHandler(jwtService, customOauthService);
+    }
+
+    @Bean
+    public Oauth2LoginFailureHandler loginFailureHandler() {
+        return new Oauth2LoginFailureHandler();
     }
 
     @Bean
