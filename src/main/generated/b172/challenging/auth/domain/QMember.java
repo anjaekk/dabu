@@ -46,7 +46,7 @@ public class QMember extends EntityPathBase<Member> {
 
     public final DateTimePath<java.time.LocalDateTime> updatedAt = createDateTime("updatedAt", java.time.LocalDateTime.class);
 
-    public final b172.challenging.Wallet.domain.QWallet wallet;
+    public final b172.challenging.wallet.domain.QWallet wallet;
 
     public QMember(String variable) {
         this(Member.class, forVariable(variable), INITS);
@@ -66,7 +66,7 @@ public class QMember extends EntityPathBase<Member> {
 
     public QMember(Class<? extends Member> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.wallet = inits.isInitialized("wallet") ? new b172.challenging.Wallet.domain.QWallet(forProperty("wallet"), inits.get("wallet")) : null;
+        this.wallet = inits.isInitialized("wallet") ? new b172.challenging.wallet.domain.QWallet(forProperty("wallet"), inits.get("wallet")) : null;
     }
 
 }

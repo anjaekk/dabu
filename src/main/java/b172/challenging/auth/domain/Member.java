@@ -1,6 +1,6 @@
 package b172.challenging.auth.domain;
 
-import b172.challenging.Wallet.domain.Wallet;
+import b172.challenging.wallet.domain.Wallet;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
