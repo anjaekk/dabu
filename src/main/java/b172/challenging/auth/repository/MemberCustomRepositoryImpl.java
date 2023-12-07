@@ -1,4 +1,4 @@
-package b172.challenging.auth.Repository;
+package b172.challenging.auth.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;

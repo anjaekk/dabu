@@ -1,13 +1,10 @@
 package b172.challenging.auth.service;
 
-import b172.challenging.auth.Repository.MemberCustomRepository;
-import b172.challenging.auth.Repository.MemberRepository;
+import b172.challenging.auth.repository.MemberRepository;
 import b172.challenging.auth.domain.Member;
 import b172.challenging.auth.domain.OauthProvider;
 import b172.challenging.auth.oauth.CustomOauth2User;
 import b172.challenging.auth.oauth.OauthAttributes;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,7 +26,7 @@ import java.util.Map;
 public class CustomOauthService extends DefaultOAuth2UserService{
 
     private final MemberRepository memberRepository;
-    private final MemberService memberService;
+    private final MemberNicknameService memberService;
     private final String KAKAO_ID_NAME = "id";
     private final String GOOGLE_ID_NAME = "sub";
 
