@@ -2,15 +2,19 @@ package b172.challenging.gathering.domain;
 
 import b172.challenging.auth.domain.Member;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Table(name = "gathering")
-@NoArgsConstructor
+@Table(name = "gathering",
+    indexes = @Index(name = "idx_gathering_platform", columnList = "platform")
+)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Gathering {
 
     @Id
