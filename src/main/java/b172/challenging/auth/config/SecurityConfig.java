@@ -1,6 +1,7 @@
 package b172.challenging.auth.config;
 
-import b172.challenging.auth.Repository.MemberRepository;
+import b172.challenging.auth.oauth.CustomAuthenticationEntryPoint;
+import b172.challenging.auth.repository.MemberRepository;
 import b172.challenging.auth.oauth.filter.JwtAuthenticationFilter;
 import b172.challenging.auth.oauth.handler.Oauth2LoginFailureHandler;
 import b172.challenging.auth.oauth.handler.Oauth2LoginSuccessHandler;
@@ -17,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Slf4j
@@ -40,7 +42,10 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
+        http
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement((sessionManagement) ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
@@ -51,24 +56,28 @@ public class SecurityConfig {
                                 , new AntPathRequestMatcher("/js/**")
                                 , new AntPathRequestMatcher("/favicon.ico")
                                 , new AntPathRequestMatcher("/login/**")
-                                , new AntPathRequestMatcher("/oauth/**")
+                                , new AntPathRequestMatcher("/oauth2/**")
                                 , new AntPathRequestMatcher("/h2-console/**")
                                 , new AntPathRequestMatcher("/swagger-ui/**")
                                 , new AntPathRequestMatcher("/api-docs/**")
                                 , new AntPathRequestMatcher("/example/**")
                         ).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/v1/members/**")).hasRole("ACTIVE")
                         .anyRequest().authenticated()
                 )
                 .oauth2Login((oauth2) -> oauth2
                         .successHandler(oauth2LoginSuccessHandler)
                         .failureHandler(oauth2LoginFailureHandler)
                         .userInfoEndpoint((userInfoEndpoint -> userInfoEndpoint
-                                .userService(customOauthService))));
-
+                                .userService(customOauthService)))
+                )
+                .exceptionHandling((exceptionHandling) ->
+                        exceptionHandling.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                );
+        http.addFilterAfter(jwtAuthenticationFilter(), LogoutFilter.class);
         return http.build();
-
-
     }
+
     @Bean
     public Oauth2LoginSuccessHandler loginSuccessHandler() {
         return new Oauth2LoginSuccessHandler(jwtService, customOauthService);

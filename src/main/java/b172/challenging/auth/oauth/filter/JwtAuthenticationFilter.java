@@ -1,8 +1,10 @@
 package b172.challenging.auth.oauth.filter;
 
-import b172.challenging.auth.Repository.MemberRepository;
+import b172.challenging.auth.repository.MemberRepository;
 import b172.challenging.auth.domain.Member;
 import b172.challenging.auth.service.JwtService;
+import b172.challenging.common.exception.CustomRuntimeException;
+import b172.challenging.common.exception.ErrorCode;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -53,7 +55,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             return;
         }
-
         checkAccessTokenAndAuthentication(request, response, filterChain);
     }
 
@@ -98,22 +99,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public void verifyJwtCodeAndAuthenticate(Long memberId, String jwtCode) {
         memberRepository.findJwtCodeById(memberId)
                 .filter(savedJwtCode -> savedJwtCode.equals(jwtCode))
-                .ifPresentOrElse(
-                        savedJwtCode -> {
-                            Member member = memberRepository.findById(memberId)
-                                    .orElseThrow(() -> new EntityNotFoundException(
-                                            "사용자 ID: " + memberId + "를 찾을 수 없습니다."
-                                            )
-                                    );
+                .orElseThrow(() -> new CustomRuntimeException(ErrorCode.UNAUTHORIZED));
 
-                            Authentication authentication =
-                                    new UsernamePasswordAuthenticationToken(member, null);
-
-                            SecurityContextHolder.getContext().setAuthentication(authentication);
-                        },
-                        () -> {
-                            throw new BadCredentialsException("JWT 코드가 일치하지 않습니다.");
-                        }
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                                "사용자 ID: " + memberId + "를 찾을 수 없습니다."
+                        )
                 );
+
+        Authentication authentication =
+                new UsernamePasswordAuthenticationToken(member, null);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }
