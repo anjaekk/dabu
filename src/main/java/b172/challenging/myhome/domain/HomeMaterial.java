@@ -15,9 +15,9 @@ public class HomeMaterial {
     @Column(name = "home_material_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "home_id", nullable = false)
-    private MyHome myHome;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "home_id", nullable = false)
+//    private MyHome myHome;
 
     @Column(nullable = false, length = 30)
     private String name;

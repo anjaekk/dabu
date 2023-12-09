@@ -51,7 +51,7 @@ public class QAppNotification extends EntityPathBase<AppNotification> {
     public QAppNotification(Class<? extends AppNotification> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.appNotificationTemplate = inits.isInitialized("appNotificationTemplate") ? new QAppNotificationTemplate(forProperty("appNotificationTemplate")) : null;
-        this.member = inits.isInitialized("member") ? new b172.challenging.auth.domain.QMember(forProperty("member"), inits.get("member")) : null;
+        this.member = inits.isInitialized("member") ? new b172.challenging.auth.domain.QMember(forProperty("member")) : null;
     }
 
 }

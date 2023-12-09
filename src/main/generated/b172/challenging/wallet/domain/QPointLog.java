@@ -52,7 +52,7 @@ public class QPointLog extends EntityPathBase<PointLog> {
 
     public QPointLog(Class<? extends PointLog> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.member = inits.isInitialized("member") ? new b172.challenging.auth.domain.QMember(forProperty("member"), inits.get("member")) : null;
+        this.member = inits.isInitialized("member") ? new b172.challenging.auth.domain.QMember(forProperty("member")) : null;
     }
 
 }

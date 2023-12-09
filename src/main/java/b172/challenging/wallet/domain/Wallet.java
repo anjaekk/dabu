@@ -23,9 +23,9 @@ public class Wallet {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "home_id", nullable = true) // FIXME: home 정보 추가 후 nullable=false로 변경
-    private MyHome MyHome;
+    private MyHome myHome;
 
     @Column(name = "home_name", length = 30)
     private String homeName;

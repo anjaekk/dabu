@@ -30,7 +30,7 @@ public class QWallet extends EntityPathBase<Wallet> {
 
     public final b172.challenging.auth.domain.QMember member;
 
-    public final b172.challenging.myhome.domain.QMyHome MyHome;
+    public final b172.challenging.myhome.domain.QMyHome myHome;
 
     public final NumberPath<Long> point = createNumber("point", Long.class);
 
@@ -54,8 +54,8 @@ public class QWallet extends EntityPathBase<Wallet> {
 
     public QWallet(Class<? extends Wallet> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.member = inits.isInitialized("member") ? new b172.challenging.auth.domain.QMember(forProperty("member"), inits.get("member")) : null;
-        this.MyHome = inits.isInitialized("MyHome") ? new b172.challenging.myhome.domain.QMyHome(forProperty("MyHome")) : null;
+        this.member = inits.isInitialized("member") ? new b172.challenging.auth.domain.QMember(forProperty("member")) : null;
+        this.myHome = inits.isInitialized("myHome") ? new b172.challenging.myhome.domain.QMyHome(forProperty("myHome")) : null;
     }
 
 }

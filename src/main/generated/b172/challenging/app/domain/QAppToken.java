@@ -54,7 +54,7 @@ public class QAppToken extends EntityPathBase<AppToken> {
 
     public QAppToken(Class<? extends AppToken> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.member = inits.isInitialized("member") ? new b172.challenging.auth.domain.QMember(forProperty("member"), inits.get("member")) : null;
+        this.member = inits.isInitialized("member") ? new b172.challenging.auth.domain.QMember(forProperty("member")) : null;
     }
 
 }

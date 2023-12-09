@@ -49,7 +49,7 @@ public class QBadgeMember extends EntityPathBase<BadgeMember> {
     public QBadgeMember(Class<? extends BadgeMember> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.badge = inits.isInitialized("badge") ? new QBadge(forProperty("badge")) : null;
-        this.member = inits.isInitialized("member") ? new b172.challenging.auth.domain.QMember(forProperty("member"), inits.get("member")) : null;
+        this.member = inits.isInitialized("member") ? new b172.challenging.auth.domain.QMember(forProperty("member")) : null;
     }
 
 }

@@ -51,7 +51,7 @@ public class QGatheringSavingLog extends EntityPathBase<GatheringSavingLog> {
     public QGatheringSavingLog(Class<? extends GatheringSavingLog> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.gathering = inits.isInitialized("gathering") ? new QGathering(forProperty("gathering"), inits.get("gathering")) : null;
-        this.member = inits.isInitialized("member") ? new b172.challenging.auth.domain.QMember(forProperty("member"), inits.get("member")) : null;
+        this.member = inits.isInitialized("member") ? new b172.challenging.auth.domain.QMember(forProperty("member")) : null;
     }
 
 }
