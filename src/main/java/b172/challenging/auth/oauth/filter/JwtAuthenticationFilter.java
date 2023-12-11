@@ -100,15 +100,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         memberRepository.findJwtCodeById(memberId)
                 .filter(savedJwtCode -> savedJwtCode.equals(jwtCode))
                 .orElseThrow(() -> new CustomRuntimeException(ErrorCode.UNAUTHORIZED));
-
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(
                                 "사용자 ID: " + memberId + "를 찾을 수 없습니다."
                         )
                 );
-
         Authentication authentication =
                 new UsernamePasswordAuthenticationToken(member, null);
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }

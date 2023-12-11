@@ -13,9 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
-import java.util.Base64;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -43,6 +41,7 @@ public class JwtService {
     private static final String MEMBER_ID_CLAIM = "memberId";
     private static final String CODE_CLAIM = "code";
     private static final String BEARER = "Bearer ";
+    private static final String AUTHORITIES_KEY = "authority";
 
     private final MemberRepository memberRepository;
 

@@ -6,9 +6,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Role {
-    PENDING("PENDING"),
-    ACTIVE("ACTIVE"),
-    STAFF("STAFF");
+    ROLE_GUEST("GUEST"),
+    ROLE_MEMBER("MEMBER"),
+    ROLE_ADMIN("ADMIN");
 
     private final String key;
 }

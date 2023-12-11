@@ -34,7 +34,7 @@ public class Member {
     @Column(length = 30)
     private String jwtCode;
 
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -76,7 +76,7 @@ public class Member {
         this.oauthProvider = oauthProvider;
         this.oauthId = oauthId;
         this.nickname = nickname;
-        this.role = Role.PENDING;
+        this.role = Role.ROLE_GUEST;
         this.isLeaved = false;
     }
 

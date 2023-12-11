@@ -1,5 +1,6 @@
 package b172.challenging.auth.config;
 
+import b172.challenging.auth.domain.Role;
 import b172.challenging.auth.oauth.CustomAuthenticationEntryPoint;
 import b172.challenging.auth.repository.MemberRepository;
 import b172.challenging.auth.oauth.filter.JwtAuthenticationFilter;
@@ -18,8 +19,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import java.nio.file.PathMatcher;
 
 @Slf4j
 @EnableWebSecurity
@@ -50,19 +54,21 @@ public class SecurityConfig {
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
-                        .requestMatchers(new AntPathRequestMatcher("/")
+                        .requestMatchers(new AntPathRequestMatcher("/**")
                                 , new AntPathRequestMatcher("/css/**")
                                 , new AntPathRequestMatcher("/images/**")
                                 , new AntPathRequestMatcher("/js/**")
                                 , new AntPathRequestMatcher("/favicon.ico")
                                 , new AntPathRequestMatcher("/login/**")
+                                , new AntPathRequestMatcher("/oauth/**")
                                 , new AntPathRequestMatcher("/oauth2/**")
                                 , new AntPathRequestMatcher("/h2-console/**")
                                 , new AntPathRequestMatcher("/swagger-ui/**")
                                 , new AntPathRequestMatcher("/api-docs/**")
                                 , new AntPathRequestMatcher("/example/**")
+                                , new AntPathRequestMatcher("/error/**")
                         ).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/v1/members/**")).hasRole("ACTIVE")
+                        //.requestMatchers(new AntPathRequestMatcher("/v1/members/profile")).hasRole("PENDING")
                         .anyRequest().authenticated()
                 )
                 .oauth2Login((oauth2) -> oauth2
@@ -74,7 +80,7 @@ public class SecurityConfig {
                 .exceptionHandling((exceptionHandling) ->
                         exceptionHandling.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 );
-        http.addFilterAfter(jwtAuthenticationFilter(), LogoutFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
