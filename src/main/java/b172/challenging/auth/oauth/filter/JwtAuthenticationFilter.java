@@ -1,7 +1,10 @@
 package b172.challenging.auth.oauth.filter;
 
+import b172.challenging.auth.oauth.CustomOauth2User;
+import b172.challenging.auth.oauth.Oauth2UserInfo;
 import b172.challenging.auth.repository.MemberRepository;
 import b172.challenging.auth.domain.Member;
+import b172.challenging.auth.service.CustomOauthService;
 import b172.challenging.auth.service.JwtService;
 import b172.challenging.common.exception.CustomRuntimeException;
 import b172.challenging.common.exception.ErrorCode;
@@ -12,15 +15,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
-import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -31,7 +34,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
-    private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
+    private CustomOauthService customOauthService;
+
 
     @Override
     protected void doFilterInternal(
@@ -52,8 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 checkRefreshTokenAndReIssueTokens(response, refreshToken);
             } catch (Exception e) {
                 throw new RuntimeException(e);
-            }
-            return;
+            } return;
         }
         checkAccessTokenAndAuthentication(request, response, filterChain);
     }
@@ -88,7 +91,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     try {
                         Long memberId = jwtService.extractMemberId(accessToken);
                         String jwtCode = jwtService.extractJwtCode(accessToken);
-                        verifyJwtCodeAndAuthenticate(memberId, jwtCode);
+                        Member member = verifyJwtCodeAndAuthenticate(memberId, jwtCode);
+                        saveAuthentication(member);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -96,18 +100,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    public void verifyJwtCodeAndAuthenticate(Long memberId, String jwtCode) {
+    public Member verifyJwtCodeAndAuthenticate(Long memberId, String jwtCode) {
         memberRepository.findJwtCodeById(memberId)
                 .filter(savedJwtCode -> savedJwtCode.equals(jwtCode))
                 .orElseThrow(() -> new CustomRuntimeException(ErrorCode.UNAUTHORIZED));
-        Member member = memberRepository.findById(memberId)
+        return memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                                "사용자 ID: " + memberId + "를 찾을 수 없습니다."
-                        )
-                );
-        Authentication authentication =
-                new UsernamePasswordAuthenticationToken(member, null);
+                                "사용자 ID: " + memberId + "를 찾을 수 없습니다."));
+    }
 
+    public void saveAuthentication(Member member) {
+        CustomOauth2User customOauth2User = new CustomOauth2User(
+                Collections.singleton(new SimpleGrantedAuthority(member.getRole().getKey())),
+                Map.of("memberId", member.getId()),
+                "memberId",
+                member.getId(),
+                member.getRole()
+        );
+        Authentication authentication = new OAuth2AuthenticationToken(customOauth2User, customOauth2User.getAuthorities(), "memberId");
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }

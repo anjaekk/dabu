@@ -18,12 +18,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import java.nio.file.PathMatcher;
 
 @Slf4j
 @EnableWebSecurity
@@ -54,7 +52,7 @@ public class SecurityConfig {
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
-                        .requestMatchers(new AntPathRequestMatcher("/**")
+                        .requestMatchers(new AntPathRequestMatcher("/")
                                 , new AntPathRequestMatcher("/css/**")
                                 , new AntPathRequestMatcher("/images/**")
                                 , new AntPathRequestMatcher("/js/**")
@@ -68,7 +66,7 @@ public class SecurityConfig {
                                 , new AntPathRequestMatcher("/example/**")
                                 , new AntPathRequestMatcher("/error/**")
                         ).permitAll()
-                        //.requestMatchers(new AntPathRequestMatcher("/v1/members/profile")).hasRole("PENDING")
+                        .requestMatchers(new AntPathRequestMatcher("/v1/members/profile")).hasAnyRole("MEMBER", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .oauth2Login((oauth2) -> oauth2
@@ -80,7 +78,7 @@ public class SecurityConfig {
                 .exceptionHandling((exceptionHandling) ->
                         exceptionHandling.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 );
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(jwtAuthenticationFilter(), OAuth2LoginAuthenticationFilter.class);
         return http.build();
     }
 

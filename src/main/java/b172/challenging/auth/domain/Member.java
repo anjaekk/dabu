@@ -76,11 +76,18 @@ public class Member {
         this.oauthProvider = oauthProvider;
         this.oauthId = oauthId;
         this.nickname = nickname;
-        this.role = Role.ROLE_GUEST;
+        this.role = Role.GUEST;
         this.isLeaved = false;
     }
 
     public void setJwtCode(String jwtCode) {
         this.jwtCode = jwtCode;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+    public boolean isNicknameChanged(String inputNickname) {
+        return !nickname.equals(inputNickname);
     }
 }
