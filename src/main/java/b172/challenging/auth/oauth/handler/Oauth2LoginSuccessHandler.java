@@ -32,7 +32,7 @@ public class Oauth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         Long memberId = oauth2User.getMemberId();
         String accessToken = jwtService.createAccessToken(memberId);
         String refreshToken = jwtService.createRefreshToken(memberId);
-        if (oauth2User.getRole() == Role.PENDING) {
+        if (oauth2User.getRole() == Role.GUEST) {
             response.addHeader(jwtService.getAccessHeader(), "Bearer " + accessToken);
             response.sendRedirect("/signup-form"); // FIXME: 추가 정보 입력창으로 redirect
         } else {

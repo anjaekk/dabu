@@ -27,15 +27,12 @@ public class CustomOauthService extends DefaultOAuth2UserService{
 
     private final MemberRepository memberRepository;
     private final MemberNicknameService memberService;
-    private final String KAKAO_ID_NAME = "id";
-    private final String GOOGLE_ID_NAME = "sub";
 
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService<OAuth2UserRequest, OAuth2User> service = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = service.loadUser(userRequest); //Oauth 정보
-
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId(); // Oauth 서비스 이름
         OauthProvider oauthProvider = getOauthProvider(registrationId);
@@ -61,16 +58,6 @@ public class CustomOauthService extends DefaultOAuth2UserService{
         }
         else if ("google".equals(registrationId)) {
             return OauthProvider.GOOGLE;
-        }
-        throw new IllegalArgumentException("지원하지 않는 인증수단 입니다.");
-    }
-
-    public String getOauthIdName(OauthProvider oauthProvider) {
-        if (oauthProvider.equals(OauthProvider.KAKAO)) {
-            return KAKAO_ID_NAME;
-        }
-        else if (oauthProvider.equals(OauthProvider.GOOGLE)) {
-            return GOOGLE_ID_NAME;
         }
         throw new IllegalArgumentException("지원하지 않는 인증수단 입니다.");
     }
