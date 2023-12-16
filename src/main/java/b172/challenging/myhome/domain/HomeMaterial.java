@@ -1,5 +1,6 @@
 package b172.challenging.myhome.domain;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "home_material")
 @NoArgsConstructor
+@Schema(description = "집에 필요한 자재")
 public class HomeMaterial {
 
     @Id
@@ -20,8 +22,10 @@ public class HomeMaterial {
 //    private MyHome myHome;
 
     @Column(nullable = false, length = 30)
+    @Schema(description = "재료 이름")
     private String name;
 
     @Column(nullable = false)
+    @Schema(description = "필요한 양")
     private Long needed;
 }
