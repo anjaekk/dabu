@@ -3,9 +3,9 @@ package b172.challenging.gathering.domain;
 import b172.challenging.auth.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.BatchSize;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -24,6 +24,7 @@ public class Gathering {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_member_id", nullable = false)
+//    @JsonIgnore
     private Member ownerMember;
 
     @Column(nullable = false, length = 10)
@@ -55,6 +56,9 @@ public class Gathering {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @OneToMany(mappedBy = "gathering", cascade = { CascadeType.PERSIST , CascadeType.MERGE })
+    private List<GatheringMember> gatheringMembers;
+
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
@@ -66,5 +70,10 @@ public class Gathering {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public void addGatheringMember(GatheringMember gatheringMember){
+        gatheringMembers.add(gatheringMember);
+        gatheringMember.setGathering(this);
     }
 }

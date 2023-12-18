@@ -1,23 +1,29 @@
 package b172.challenging.gathering.service;
 
+import b172.challenging.auth.domain.Member;
+import b172.challenging.auth.repository.MemberRepository;
+import b172.challenging.common.exception.CustomRuntimeException;
+import b172.challenging.common.exception.ErrorCode;
 import b172.challenging.gathering.domain.*;
-import b172.challenging.gathering.dto.GatheringMemberPageResponseDto;
-import b172.challenging.gathering.dto.GatheringPageResponseDto;
+import b172.challenging.gathering.dto.*;
 import b172.challenging.gathering.repository.GatheringMemberRepository;
 import b172.challenging.gathering.repository.GatheringRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class GatheringService {
     private final GatheringRepository gatheringRepository;
     private final GatheringMemberRepository gatheringMemberRepository;
+    private final MemberRepository memberRepository;
 
     public GatheringPageResponseDto findGatheringByPlatform (AppTechPlatform platform, GatheringStatus status, Pageable page){
         Page<Gathering> gatheringsPage =
@@ -67,6 +73,56 @@ public class GatheringService {
                 .totalElements(gatheringMembersPage.getTotalElements())
                 .totalPages(gatheringMembersPage.getTotalPages())
                 .last(gatheringMembersPage.isLast())
+                .build();
+    }
+
+    @Transactional
+    public GatheringMakeResponseDto makeGathering(Long memberId, GatheringMakeRequestDto gatheringMakeRequestDto) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomRuntimeException(ErrorCode.NOT_FOUND_MEMBER));
+
+        Gathering gathering = Gathering.builder()
+                 .ownerMember(member)
+                .platform(gatheringMakeRequestDto.appTechPlatform())
+                .title(gatheringMakeRequestDto.title())
+                .peopleNum(gatheringMakeRequestDto.peopleNum())
+                .workingDays(gatheringMakeRequestDto.workingDays())
+                .goalAmount(gatheringMakeRequestDto.goalAmount())
+                .status(GatheringStatus.PENDING)
+                .startDate(gatheringMakeRequestDto.startDate())
+                .gatheringMembers(new ArrayList<>())
+                .endDate(gatheringMakeRequestDto.endDate())
+                .build();
+
+        GatheringMember gatheringMember = GatheringMember.builder()
+                .member(member)
+                .gathering(gathering)
+                .status(GatheringMemberStatus.ONGOING)
+                .amount(0L)
+                .count(0)
+                .build();
+
+        gathering.addGatheringMember(gatheringMember);
+
+        gatheringRepository.save(gathering);
+
+
+        return GatheringMakeResponseDto.builder()
+                .id(gathering.getId())
+                .title(gathering.getTitle())
+                .owner(gathering.getOwnerMember())
+                .build();
+    }
+
+    public GatheringStatusResponseDto findGatheringStatus(Long gatheringId, Long userId, GatheringStatus status) {
+        Optional<Gathering> gatheringOptional = gatheringRepository.findById(gatheringId);
+
+        Gathering gathering = gatheringOptional.orElse(null);
+
+        return GatheringStatusResponseDto.builder()
+                .title(gathering.getTitle())
+                .gatheringStatus(gathering.getStatus())
+                .remainNum(gathering.getPeopleNum() - gathering.getGatheringMembers().size())
                 .build();
     }
 }

@@ -1,7 +1,10 @@
 package b172.challenging.gathering.domain;
 
 import b172.challenging.auth.domain.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +14,8 @@ import java.time.LocalDateTime;
 @Getter
 @Table(name = "gathering_member")
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class GatheringMember {
 
     @Id
@@ -20,10 +25,12 @@ public class GatheringMember {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id", nullable = false)
+    @JsonIgnore
     private Gathering gathering;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
+//    @JsonIgnore
     private Member member;
 
     @Column(nullable = false, length = 10)
@@ -45,5 +52,9 @@ public class GatheringMember {
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
+    }
+
+    public void setGathering(Gathering gathering){
+        this.gathering = gathering;
     }
 }
