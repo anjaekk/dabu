@@ -1,5 +1,6 @@
 package b172.challenging.auth.config;
 
+import b172.challenging.auth.domain.Role;
 import b172.challenging.auth.oauth.CustomAuthenticationEntryPoint;
 import b172.challenging.auth.repository.MemberRepository;
 import b172.challenging.auth.oauth.filter.JwtAuthenticationFilter;
@@ -17,9 +18,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
 
 @Slf4j
 @EnableWebSecurity
@@ -56,13 +58,15 @@ public class SecurityConfig {
                                 , new AntPathRequestMatcher("/js/**")
                                 , new AntPathRequestMatcher("/favicon.ico")
                                 , new AntPathRequestMatcher("/login/**")
+                                , new AntPathRequestMatcher("/oauth/**")
                                 , new AntPathRequestMatcher("/oauth2/**")
                                 , new AntPathRequestMatcher("/h2-console/**")
                                 , new AntPathRequestMatcher("/swagger-ui/**")
                                 , new AntPathRequestMatcher("/api-docs/**")
                                 , new AntPathRequestMatcher("/example/**")
+                                , new AntPathRequestMatcher("/error/**")
                         ).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/v1/members/**")).hasRole("ACTIVE")
+                        .requestMatchers(new AntPathRequestMatcher("/v1/members/profile")).hasAnyRole("MEMBER", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .oauth2Login((oauth2) -> oauth2
@@ -74,7 +78,7 @@ public class SecurityConfig {
                 .exceptionHandling((exceptionHandling) ->
                         exceptionHandling.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 );
-        http.addFilterAfter(jwtAuthenticationFilter(), LogoutFilter.class);
+        http.addFilterAfter(jwtAuthenticationFilter(), OAuth2LoginAuthenticationFilter.class);
         return http.build();
     }
 

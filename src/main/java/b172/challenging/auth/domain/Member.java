@@ -34,7 +34,7 @@ public class Member {
     @Column(length = 30)
     private String jwtCode;
 
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -56,8 +56,8 @@ public class Member {
 
     @Column(name = "leaved_at")
     private LocalDateTime leavedAt;
-
-//    @OneToOne(mappedBy = "member") //, cascade = CascadeType.ALL)
+  
+//    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
 //    private Wallet wallet;
 
     @PrePersist
@@ -76,11 +76,18 @@ public class Member {
         this.oauthProvider = oauthProvider;
         this.oauthId = oauthId;
         this.nickname = nickname;
-        this.role = Role.PENDING;
+        this.role = Role.GUEST;
         this.isLeaved = false;
     }
 
     public void setJwtCode(String jwtCode) {
         this.jwtCode = jwtCode;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+    public boolean isNicknameChanged(String inputNickname) {
+        return !nickname.equals(inputNickname);
     }
 }
