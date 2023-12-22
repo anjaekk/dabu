@@ -2,6 +2,7 @@ package b172.challenging.wallet.domain;
 
 import b172.challenging.myhome.domain.HomeMaterial;
 import b172.challenging.auth.domain.Member;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "material_wallet")
 @NoArgsConstructor
+@Schema(description = "사용자 모은 자재")
 public class MaterialWallet {
 
     @Id
@@ -19,12 +21,15 @@ public class MaterialWallet {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
+    @Schema(description = "사용자 아이디")
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "home_material_id", nullable = false)
+    @Schema(description = "집 종류 Id")
     private HomeMaterial homeMaterial;
 
     @Column(name = "collected", nullable = false, columnDefinition = "bigint default 0")
+    @Schema(description = "모은 양")
     private Long collected;
 }

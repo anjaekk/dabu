@@ -56,7 +56,7 @@ public class Member {
 
     @Column(name = "leaved_at")
     private LocalDateTime leavedAt;
-
+  
 //    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
 //    private Wallet wallet;
 

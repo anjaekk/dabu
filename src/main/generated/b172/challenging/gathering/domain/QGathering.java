@@ -64,7 +64,7 @@ public class QGathering extends EntityPathBase<Gathering> {
 
     public QGathering(Class<? extends Gathering> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.ownerMember = inits.isInitialized("ownerMember") ? new b172.challenging.auth.domain.QMember(forProperty("ownerMember"), inits.get("ownerMember")) : null;
+        this.ownerMember = inits.isInitialized("ownerMember") ? new b172.challenging.auth.domain.QMember(forProperty("ownerMember")) : null;
     }
 
 }
