@@ -2,7 +2,6 @@ package b172.challenging.gathering.repository;
 
 import b172.challenging.gathering.domain.AppTechPlatform;
 import b172.challenging.gathering.domain.Gathering;
-import b172.challenging.gathering.domain.GatheringMember;
 import b172.challenging.gathering.domain.GatheringStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -10,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.data.domain.Pageable;
 
-public interface GatheringRepository extends JpaRepository<Gathering,Long>, GatheringRepositoryCustom {
+public interface GatheringRepository extends JpaRepository<Gathering,Long> {
     @EntityGraph(attributePaths = "ownerMember")
     Page<Gathering> findByPlatformAndStatus(AppTechPlatform platform, GatheringStatus status , Pageable page);
     @EntityGraph(attributePaths = "ownerMember")
