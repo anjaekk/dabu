@@ -38,3 +38,6 @@ out/
 
 ### security
 **/application-security.yml
+
+### QEntity
+**/generated/**

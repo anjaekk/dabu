@@ -1,7 +1,4 @@
-package b172.challenging.auth.Repository;
-
-import b172.challenging.auth.domain.Member;
-import b172.challenging.auth.domain.OauthProvider;
+package b172.challenging.auth.repository;
 
 import java.util.Optional;
 

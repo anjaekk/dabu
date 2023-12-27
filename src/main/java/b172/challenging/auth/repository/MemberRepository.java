@@ -1,4 +1,4 @@
-package b172.challenging.auth.Repository;
+package b172.challenging.auth.repository;
 
 import b172.challenging.auth.domain.Member;
 import b172.challenging.auth.domain.OauthProvider;

@@ -1,7 +1,6 @@
 package b172.challenging.auth.service;
 
-import b172.challenging.auth.Repository.MemberRepository;
-import b172.challenging.auth.domain.Member;
+import b172.challenging.auth.repository.MemberRepository;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
@@ -12,12 +11,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
-import java.util.Base64;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -45,6 +41,7 @@ public class JwtService {
     private static final String MEMBER_ID_CLAIM = "memberId";
     private static final String CODE_CLAIM = "code";
     private static final String BEARER = "Bearer ";
+    private static final String AUTHORITIES_KEY = "authority";
 
     private final MemberRepository memberRepository;
 
