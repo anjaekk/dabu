@@ -56,6 +56,9 @@ public class GatheringMember {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+//    @OneToMany(mappedBy = "gatheringMember", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+//    private List<GatheringSavingLog> gatheringSavingLog;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
@@ -71,6 +74,10 @@ public class GatheringMember {
 
     public void setStatus(GatheringMemberStatus status){
         this.status = status;
+    }
+
+    public GatheringMember(Long id){
+        this.id = id;
     }
 
 }

@@ -28,7 +28,7 @@ public class Wallet {
 
     @Schema(description = "MyHome id")
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "home_id", nullable = true) // FIXME: home 정보 추가 후 nullable=false로 변경
+    @JoinColumn(name = "home_id") // FIXME: home 정보 추가 후 nullable=false로 변경
     private MyHome myHome;
 
     @Schema(description = "나의 집 이름")
@@ -46,5 +46,10 @@ public class Wallet {
     @Schema(description = "집 업데이트 날짜")
     @Column(name = "home_updated_at")
     private LocalDateTime homeUpdatedAt;
+
+    public void savePoint(Long amount){
+        this.saveAmount += amount;
+        this.point += amount;
+    }
 
 }
