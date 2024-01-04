@@ -53,11 +53,11 @@ public class GatheringController {
     })
     @Parameter(name = "status", description = "status : [PENDING] or [ONGOING, COMPLETED]", example = "TOSS")
     @Parameter(name = "platform", description = "platform : [TOSS, CASH_WORK, MONIMO, BALSO]", example = "TOSS")
-    public ResponseEntity<GatheringPageResponseDto> getGathering (@PathVariable(required = false) AppTechPlatform platform,
-                                                                  @PathVariable GatheringStatus status ,
-                                                                  @PageableDefault(size = 5, direction = Sort.Direction.DESC) Pageable page){
+    public ResponseEntity<GatheringPageResponseDto> getGathering(@PathVariable(required = false) AppTechPlatform platform,
+                                                                 @PathVariable GatheringStatus status,
+                                                                 @PageableDefault(size = 5, direction = Sort.Direction.DESC) Pageable page) {
         return platform == null
-                ? ResponseEntity.ok(gatheringService.findAllGathering(status ,page))
+                ? ResponseEntity.ok(gatheringService.findAllGathering(status, page))
                 : ResponseEntity.ok(gatheringService.findGatheringByPlatform(platform, status, page));
     }
 
@@ -67,7 +67,7 @@ public class GatheringController {
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자 입니다."),
     })
-    public ResponseEntity<GatheringPageResponseDto.AppTechPlatformDto> getPlatform (){
+    public ResponseEntity<GatheringPageResponseDto.AppTechPlatformDto> getPlatform() {
         return ResponseEntity.ok(
                 GatheringPageResponseDto.AppTechPlatformDto.builder()
                         .appTechPlatform(AppTechPlatform.values())
@@ -116,7 +116,7 @@ public class GatheringController {
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자 입니다."),
     })
     public ResponseEntity<JoinGatheringResponseDto> joinGathering(Principal principal,
-                                                @PathVariable Long gatheringId){
+                                                                  @PathVariable Long gatheringId){
         Long memberId = Long.parseLong(principal.getName());
         return ResponseEntity.ok(gatheringService.joinGathering(memberId, gatheringId));
     }
@@ -128,7 +128,7 @@ public class GatheringController {
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자 입니다."),
     })
     public ResponseEntity<LeftGatheringResponseDto> leftGathering(Principal principal,
-                                                @PathVariable Long gatheringMemberId){
+                                                                  @PathVariable Long gatheringMemberId){
         Long memberId = Long.parseLong(principal.getName());
         return ResponseEntity.ok(gatheringService.leftGathering(memberId, gatheringMemberId));
     }
