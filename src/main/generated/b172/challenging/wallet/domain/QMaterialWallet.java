@@ -28,7 +28,7 @@ public class QMaterialWallet extends EntityPathBase<MaterialWallet> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final b172.challenging.auth.domain.QMember member;
+    public final b172.challenging.member.domain.QMember member;
 
     public QMaterialWallet(String variable) {
         this(MaterialWallet.class, forVariable(variable), INITS);
@@ -49,7 +49,7 @@ public class QMaterialWallet extends EntityPathBase<MaterialWallet> {
     public QMaterialWallet(Class<? extends MaterialWallet> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.homeMaterial = inits.isInitialized("homeMaterial") ? new b172.challenging.myhome.domain.QHomeMaterial(forProperty("homeMaterial")) : null;
-        this.member = inits.isInitialized("member") ? new b172.challenging.auth.domain.QMember(forProperty("member")) : null;
+        this.member = inits.isInitialized("member") ? new b172.challenging.member.domain.QMember(forProperty("member")) : null;
     }
 
 }

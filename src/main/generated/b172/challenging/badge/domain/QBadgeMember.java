@@ -28,7 +28,7 @@ public class QBadgeMember extends EntityPathBase<BadgeMember> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final b172.challenging.auth.domain.QMember member;
+    public final b172.challenging.member.domain.QMember member;
 
     public QBadgeMember(String variable) {
         this(BadgeMember.class, forVariable(variable), INITS);
@@ -49,7 +49,7 @@ public class QBadgeMember extends EntityPathBase<BadgeMember> {
     public QBadgeMember(Class<? extends BadgeMember> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.badge = inits.isInitialized("badge") ? new QBadge(forProperty("badge")) : null;
-        this.member = inits.isInitialized("member") ? new b172.challenging.auth.domain.QMember(forProperty("member")) : null;
+        this.member = inits.isInitialized("member") ? new b172.challenging.member.domain.QMember(forProperty("member")) : null;
     }
 
 }

@@ -1,7 +1,5 @@
 package b172.challenging.auth.oauth;
 
-import b172.challenging.auth.domain.Member;
-
 import java.util.Map;
 
 public class Oauth2UserInfoKakao extends Oauth2UserInfo{

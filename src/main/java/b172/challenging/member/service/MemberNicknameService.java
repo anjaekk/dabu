@@ -1,7 +1,7 @@
-package b172.challenging.auth.service;
+package b172.challenging.member.service;
 
-import b172.challenging.auth.repository.MemberRepository;
-import b172.challenging.auth.domain.Member;
+import b172.challenging.member.repository.MemberRepository;
+import b172.challenging.member.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

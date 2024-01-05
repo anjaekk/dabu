@@ -1,4 +1,4 @@
-package b172.challenging.auth.dto.request;
+package b172.challenging.member.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

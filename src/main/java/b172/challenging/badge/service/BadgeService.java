@@ -1,9 +1,8 @@
 package b172.challenging.badge.service;
 
-import b172.challenging.auth.domain.Member;
-import b172.challenging.auth.repository.MemberRepository;
+import b172.challenging.member.domain.Member;
+import b172.challenging.member.repository.MemberRepository;
 import b172.challenging.badge.domain.Badge;
-import b172.challenging.badge.domain.BadgeMember;
 import b172.challenging.badge.dto.response.BadgeMemberResponseDto;
 import b172.challenging.badge.dto.response.BadgeResponseDto;
 import b172.challenging.badge.repository.BadgeCustomRepository;
@@ -14,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 

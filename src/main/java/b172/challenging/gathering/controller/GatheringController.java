@@ -3,7 +3,13 @@ package b172.challenging.gathering.controller;
 
 import b172.challenging.gathering.domain.AppTechPlatform;
 import b172.challenging.gathering.domain.GatheringStatus;
-import b172.challenging.gathering.dto.*;
+import b172.challenging.gathering.dto.GatheringSavingLogCertificateResponseDto;
+import b172.challenging.gathering.dto.GatheringSavingLogResponseDto;
+import b172.challenging.gathering.dto.OngoingGatheringResponseDto;
+import b172.challenging.gathering.dto.PendingGatheringResponseDto;
+import b172.challenging.gathering.dto.request.GatheringMakeRequestDto;
+import b172.challenging.gathering.dto.request.GatheringSavingLogRequestDto;
+import b172.challenging.gathering.dto.response.*;
 import b172.challenging.gathering.service.GatheringSavingLogService;
 import b172.challenging.gathering.service.GatheringService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -162,9 +168,9 @@ public class GatheringController {
             @ApiResponse(responseCode = "200", description = "수정 성공"),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자 입니다."),
     })
-    public ResponseEntity<GatheringSavingLogCertificateResponseDto> modifyGatheringSavingLog(@PathVariable Long savingLogId, 
-                                                                                             @RequestBody @Valid GatheringSavingLogRequestDto gatheringSavingLogRequestDto,
-                                                                                             Principal principal){
+    public ResponseEntity<GatheringSavingLogCertificateResponseDto> modifyGatheringSavingLog(@PathVariable Long savingLogId,
+                                                                                                                             @RequestBody @Valid GatheringSavingLogRequestDto gatheringSavingLogRequestDto,
+                                                                                                                             Principal principal){
 
         Long memberId = Long.parseLong(principal.getName());
 

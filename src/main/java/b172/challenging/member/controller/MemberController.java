@@ -1,10 +1,10 @@
-package b172.challenging.auth.controller;
+package b172.challenging.member.controller;
 
-import b172.challenging.auth.domain.Member;
-import b172.challenging.auth.dto.request.MemberProfileUpdateRequestDto;
-import b172.challenging.auth.dto.response.MemberProfileResponseDto;
-import b172.challenging.auth.repository.MemberRepository;
-import b172.challenging.auth.service.MemberService;
+import b172.challenging.member.domain.Member;
+import b172.challenging.member.dto.request.MemberProfileUpdateRequestDto;
+import b172.challenging.member.dto.response.MemberProfileResponseDto;
+import b172.challenging.member.repository.MemberRepository;
+import b172.challenging.member.service.MemberService;
 import b172.challenging.common.exception.CustomRuntimeException;
 import b172.challenging.common.exception.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,7 +16,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;

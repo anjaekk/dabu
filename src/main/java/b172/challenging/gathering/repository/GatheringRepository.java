@@ -1,6 +1,6 @@
 package b172.challenging.gathering.repository;
 
-import b172.challenging.auth.domain.Member;
+import b172.challenging.member.domain.Member;
 import b172.challenging.gathering.domain.AppTechPlatform;
 import b172.challenging.gathering.domain.Gathering;
 import b172.challenging.gathering.domain.GatheringStatus;

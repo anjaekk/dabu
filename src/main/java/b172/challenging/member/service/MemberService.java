@@ -1,17 +1,14 @@
-package b172.challenging.auth.service;
+package b172.challenging.member.service;
 
-import b172.challenging.auth.domain.Member;
-import b172.challenging.auth.dto.request.MemberProfileUpdateRequestDto;
-import b172.challenging.auth.dto.response.MemberProfileResponseDto;
-import b172.challenging.auth.repository.MemberRepository;
+import b172.challenging.member.domain.Member;
+import b172.challenging.member.dto.request.MemberProfileUpdateRequestDto;
+import b172.challenging.member.repository.MemberRepository;
 import b172.challenging.common.exception.CustomRuntimeException;
 import b172.challenging.common.exception.ErrorCode;
-import jakarta.persistence.EntityNotFoundException;
+import b172.challenging.member.service.MemberNicknameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

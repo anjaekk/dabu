@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static b172.challenging.auth.domain.QMember.member;
+import static b172.challenging.member.domain.QMember.member;
 import static b172.challenging.badge.domain.QBadgeMember.badgeMember;
 import static b172.challenging.badge.domain.QBadge.badge;
 

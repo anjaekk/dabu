@@ -1,4 +1,4 @@
-package b172.challenging.gathering.dto;
+package b172.challenging.gathering.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 

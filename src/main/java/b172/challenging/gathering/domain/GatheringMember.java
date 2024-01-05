@@ -1,6 +1,6 @@
 package b172.challenging.gathering.domain;
 
-import b172.challenging.auth.domain.Member;
+import b172.challenging.member.domain.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;

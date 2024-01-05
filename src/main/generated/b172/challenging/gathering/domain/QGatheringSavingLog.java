@@ -26,11 +26,9 @@ public class QGatheringSavingLog extends EntityPathBase<GatheringSavingLog> {
 
     public final DateTimePath<java.time.LocalDateTime> certificatedAt = createDateTime("certificatedAt", java.time.LocalDateTime.class);
 
-    public final QGathering gathering;
+    public final QGatheringMember gatheringMember;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
-
-    public final b172.challenging.auth.domain.QMember member;
 
     public QGatheringSavingLog(String variable) {
         this(GatheringSavingLog.class, forVariable(variable), INITS);
@@ -50,8 +48,7 @@ public class QGatheringSavingLog extends EntityPathBase<GatheringSavingLog> {
 
     public QGatheringSavingLog(Class<? extends GatheringSavingLog> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.gathering = inits.isInitialized("gathering") ? new QGathering(forProperty("gathering"), inits.get("gathering")) : null;
-        this.member = inits.isInitialized("member") ? new b172.challenging.auth.domain.QMember(forProperty("member")) : null;
+        this.gatheringMember = inits.isInitialized("gatheringMember") ? new QGatheringMember(forProperty("gatheringMember"), inits.get("gatheringMember")) : null;
     }
 
 }
