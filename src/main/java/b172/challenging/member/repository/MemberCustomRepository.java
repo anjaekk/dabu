@@ -1,4 +1,4 @@
-package b172.challenging.auth.repository;
+package b172.challenging.member.repository;
 
 import java.util.Optional;
 

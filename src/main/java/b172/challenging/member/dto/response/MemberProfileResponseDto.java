@@ -1,9 +1,9 @@
-package b172.challenging.auth.dto.response;
+package b172.challenging.member.dto.response;
 
-import b172.challenging.auth.domain.Member;
-import b172.challenging.auth.domain.OauthProvider;
-import b172.challenging.auth.domain.Role;
-import b172.challenging.auth.domain.Sex;
+import b172.challenging.member.domain.Member;
+import b172.challenging.member.domain.OauthProvider;
+import b172.challenging.member.domain.Role;
+import b172.challenging.member.domain.Sex;
 import lombok.*;
 
 @Getter

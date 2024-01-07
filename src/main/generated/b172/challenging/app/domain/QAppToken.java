@@ -28,7 +28,7 @@ public class QAppToken extends EntityPathBase<AppToken> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final b172.challenging.auth.domain.QMember member;
+    public final b172.challenging.member.domain.QMember member;
 
     public final BooleanPath notificationAgree = createBoolean("notificationAgree");
 
@@ -54,7 +54,7 @@ public class QAppToken extends EntityPathBase<AppToken> {
 
     public QAppToken(Class<? extends AppToken> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.member = inits.isInitialized("member") ? new b172.challenging.auth.domain.QMember(forProperty("member")) : null;
+        this.member = inits.isInitialized("member") ? new b172.challenging.member.domain.QMember(forProperty("member")) : null;
     }
 
 }

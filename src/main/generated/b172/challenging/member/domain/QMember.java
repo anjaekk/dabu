@@ -1,4 +1,4 @@
-package b172.challenging.auth.domain;
+package b172.challenging.member.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QMember extends EntityPathBase<Member> {
 
-    private static final long serialVersionUID = 1471572208L;
+    private static final long serialVersionUID = -124130846L;
 
     public static final QMember member = new QMember("member1");
 

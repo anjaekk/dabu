@@ -32,7 +32,7 @@ public class QGathering extends EntityPathBase<Gathering> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final b172.challenging.auth.domain.QMember ownerMember;
+    public final b172.challenging.member.domain.QMember ownerMember;
 
     public final NumberPath<Integer> peopleNum = createNumber("peopleNum", Integer.class);
 
@@ -66,7 +66,7 @@ public class QGathering extends EntityPathBase<Gathering> {
 
     public QGathering(Class<? extends Gathering> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.ownerMember = inits.isInitialized("ownerMember") ? new b172.challenging.auth.domain.QMember(forProperty("ownerMember")) : null;
+        this.ownerMember = inits.isInitialized("ownerMember") ? new b172.challenging.member.domain.QMember(forProperty("ownerMember")) : null;
     }
 
 }

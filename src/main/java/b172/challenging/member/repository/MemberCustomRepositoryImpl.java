@@ -1,4 +1,4 @@
-package b172.challenging.auth.repository;
+package b172.challenging.member.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static b172.challenging.auth.domain.QMember.member;
+import static b172.challenging.member.domain.QMember.member;
 
 @Repository
 public class MemberCustomRepositoryImpl implements MemberCustomRepository {

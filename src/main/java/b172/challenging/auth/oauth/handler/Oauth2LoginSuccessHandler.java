@@ -1,6 +1,6 @@
 package b172.challenging.auth.oauth.handler;
 
-import b172.challenging.auth.domain.Role;
+import b172.challenging.member.domain.Role;
 import b172.challenging.auth.oauth.CustomOauth2User;
 import b172.challenging.auth.service.CustomOauthService;
 import b172.challenging.auth.service.JwtService;
@@ -33,7 +33,7 @@ public class Oauth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         String accessToken = jwtService.createAccessToken(memberId);
         String refreshToken = jwtService.createRefreshToken(memberId);
         if (oauth2User.getRole() == Role.GUEST) {
-            response.addHeader(jwtService.getAccessHeader(), "Bearer " + accessToken);
+            jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
             response.sendRedirect("/signup-form"); // FIXME: 추가 정보 입력창으로 redirect
         } else {
             jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);

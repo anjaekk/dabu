@@ -1,7 +1,7 @@
 package b172.challenging.wallet.domain;
 
 import b172.challenging.myhome.domain.MyHome;
-import b172.challenging.auth.domain.Member;
+import b172.challenging.member.domain.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;

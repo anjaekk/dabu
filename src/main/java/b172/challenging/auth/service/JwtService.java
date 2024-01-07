@@ -1,6 +1,9 @@
 package b172.challenging.auth.service;
 
-import b172.challenging.auth.repository.MemberRepository;
+import b172.challenging.member.domain.Member;
+import b172.challenging.member.repository.MemberRepository;
+import b172.challenging.common.exception.CustomRuntimeException;
+import b172.challenging.common.exception.ErrorCode;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
@@ -48,8 +51,7 @@ public class JwtService {
 
     public String createAccessToken(Long memberId) {
         Date now = new Date();
-        String jwtCode = generateJwtCode();
-        memberRepository.updateJwtCodeById(memberId, jwtCode);
+        String jwtCode = saveRandomJwtCode(memberId);
         return JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(now.getTime() + accessTokenExpiration))
@@ -68,14 +70,9 @@ public class JwtService {
         return JWT.create()
                 .withSubject(REFRESH_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(now.getTime() + refreshTokenExpiration))
+                .withClaim(MEMBER_ID_CLAIM, memberId)
                 .withClaim(CODE_CLAIM, jwtCode)
                 .sign(Algorithm.HMAC512(secretKey));
-    }
-
-
-    public void sendAccessToken(HttpServletResponse response, String accessToken) {
-        response.setHeader(accessHeader, accessToken);
-        response.setStatus(HttpServletResponse.SC_OK);
     }
 
 
@@ -134,6 +131,15 @@ public class JwtService {
         }
     }
 
+    public Member checkMemberId(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() ->  new CustomRuntimeException(ErrorCode.NOT_FOUND_MEMBER));
+    }
+    public String saveRandomJwtCode(Long memberId) {
+        String jwtCode = generateJwtCode();
+        memberRepository.updateJwtCodeById(memberId, jwtCode);
+        return jwtCode;
+    }
 
     public String generateJwtCode() {
         byte[] randomBytes = new byte[20];

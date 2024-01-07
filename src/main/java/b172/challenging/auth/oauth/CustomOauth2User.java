@@ -1,6 +1,6 @@
 package b172.challenging.auth.oauth;
 
-import b172.challenging.auth.domain.Role;
+import b172.challenging.member.domain.Role;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

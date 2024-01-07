@@ -1,4 +1,4 @@
-package b172.challenging.auth.domain;
+package b172.challenging.member.domain;
 
 public enum Sex {
     MALE,

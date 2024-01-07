@@ -1,7 +1,9 @@
 package b172.challenging.gathering.service;
 
-import b172.challenging.auth.domain.Member;
-import b172.challenging.auth.repository.MemberRepository;
+import b172.challenging.gathering.dto.OngoingGatheringResponseDto;
+import b172.challenging.gathering.dto.PendingGatheringResponseDto;
+import b172.challenging.member.domain.Member;
+import b172.challenging.member.repository.MemberRepository;
 import b172.challenging.common.exception.CustomRuntimeException;
 import b172.challenging.common.exception.ErrorCode;
 import b172.challenging.gathering.domain.*;

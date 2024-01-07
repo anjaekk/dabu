@@ -1,9 +1,8 @@
 package b172.challenging.auth.oauth.filter;
 
 import b172.challenging.auth.oauth.CustomOauth2User;
-import b172.challenging.auth.oauth.Oauth2UserInfo;
-import b172.challenging.auth.repository.MemberRepository;
-import b172.challenging.auth.domain.Member;
+import b172.challenging.member.repository.MemberRepository;
+import b172.challenging.member.domain.Member;
 import b172.challenging.auth.service.CustomOauthService;
 import b172.challenging.auth.service.JwtService;
 import b172.challenging.common.exception.CustomRuntimeException;
@@ -19,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -28,6 +28,7 @@ import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
+@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final String ALLOW_PATH = "/login";
@@ -63,7 +64,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     public void checkRefreshTokenAndReIssueTokens(HttpServletResponse response, String refreshToken) throws Exception {
         Long memberId = jwtService.extractMemberId(refreshToken);
-
         Optional<Member> memberOptional = memberRepository.findById(memberId);
         if (memberOptional.isEmpty()) {
             throw new RuntimeException("사용자를 찾을 수 없습니다.");
