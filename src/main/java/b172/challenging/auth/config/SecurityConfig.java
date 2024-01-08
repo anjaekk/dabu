@@ -65,7 +65,7 @@ public class SecurityConfig {
                                 , new AntPathRequestMatcher("/error/**")
                         ).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/v1/members/profile")).hasAnyRole("GUEST", "MEMBER", "ADMIN")
-                        .requestMatchers(new AntPathRequestMatcher("/v1/badge")).hasAnyRole("MEMBER", "ADMIN")
+                        .requestMatchers(new AntPathRequestMatcher("/v1/**")).hasAnyRole("MEMBER", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .oauth2Login((oauth2) -> oauth2
