@@ -73,9 +73,9 @@ public class GatheringController {
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자 입니다."),
     })
-    public ResponseEntity<GatheringPageResponseDto.AppTechPlatformDto> getPlatform() {
+    public ResponseEntity<AppTechPlatformDto> getPlatform() {
         return ResponseEntity.ok(
-                GatheringPageResponseDto.AppTechPlatformDto.builder()
+                AppTechPlatformDto.builder()
                         .appTechPlatform(AppTechPlatform.values())
                         .build()
         );

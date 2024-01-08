@@ -64,21 +64,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     public void checkRefreshTokenAndReIssueTokens(HttpServletResponse response, String refreshToken) throws Exception {
         Long memberId = jwtService.extractMemberId(refreshToken);
-        Optional<Member> memberOptional = memberRepository.findById(memberId);
-        if (memberOptional.isEmpty()) {
-            throw new RuntimeException("사용자를 찾을 수 없습니다.");
-        }
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomRuntimeException(ErrorCode.NOT_FOUND_MEMBER));
 
-        Member member = memberOptional.get();
         String storedJwtCode = member.getJwtCode();
 
         String tokenJwtCode = jwtService.extractJwtCode(refreshToken);
         if (!tokenJwtCode.equals(storedJwtCode)) {
             throw new RuntimeException("Refresh Token이 올바르지 않습니다.");
         }
-
         jwtService.sendAccessAndRefreshToken(
-                response, jwtService.createAccessToken(memberId), jwtService.createRefreshToken(memberId)
+                response, jwtService.createAccessToken(memberId, member.getRole()), jwtService.createRefreshToken(memberId)
         );
     }
 

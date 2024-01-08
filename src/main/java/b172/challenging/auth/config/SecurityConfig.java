@@ -5,11 +5,13 @@ import b172.challenging.auth.oauth.filter.JwtAuthenticationFilter;
 import b172.challenging.auth.oauth.handler.Oauth2LoginFailureHandler;
 import b172.challenging.auth.oauth.handler.Oauth2LoginSuccessHandler;
 import b172.challenging.auth.service.CustomOauthService;
+import io.swagger.v3.oas.models.PathItem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -62,8 +64,8 @@ public class SecurityConfig {
                                 , new AntPathRequestMatcher("/example/**")
                                 , new AntPathRequestMatcher("/error/**")
                         ).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/v1/members/profile")).hasAnyRole("MEMBER", "ADMIN")
-                        .requestMatchers(new AntPathRequestMatcher("/v1/badge")).hasAnyRole("MEMBER", "ADMIN")
+                        .requestMatchers(new AntPathRequestMatcher("/v1/members/profile")).hasAnyRole("GUEST", "MEMBER", "ADMIN")
+                        .requestMatchers(new AntPathRequestMatcher("/v1/**")).hasAnyRole("MEMBER", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .oauth2Login((oauth2) -> oauth2

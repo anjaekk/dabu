@@ -7,4 +7,5 @@ public interface MemberCustomRepository {
     Optional<String> findJwtCodeById(Long id);
 
     Long updateJwtCodeById(Long memberId, String jwtCode);
+
 }

@@ -1,6 +1,6 @@
 package b172.challenging.protip.dto;
 
-import b172.challenging.auth.domain.Role;
+import b172.challenging.member.domain.Role;
 import b172.challenging.protip.domain.ProTip;
 import lombok.Builder;
 

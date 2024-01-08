@@ -1,6 +1,7 @@
 package b172.challenging.member.service;
 
 import b172.challenging.member.domain.Member;
+import b172.challenging.member.domain.Role;
 import b172.challenging.member.dto.request.MemberProfileUpdateRequestDto;
 import b172.challenging.member.repository.MemberRepository;
 import b172.challenging.common.exception.CustomRuntimeException;
@@ -25,8 +26,11 @@ public class MemberService {
         if (member.isNicknameChanged(memberProfileUpdateRequestDto.getNickname())) {
             memberNicknameService.isNicknameExists(memberProfileUpdateRequestDto.getNickname());
             member.setNickname(memberProfileUpdateRequestDto.getNickname());
-            memberRepository.save(member);
         }
+        if (member.getRole() == Role.GUEST) {
+            member.setRole(Role.MEMBER);
+        }
+        memberRepository.save(member);
         return member;
     }
 }

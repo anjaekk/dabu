@@ -1,6 +1,7 @@
 package b172.challenging.auth.service;
 
 import b172.challenging.member.domain.Member;
+import b172.challenging.member.domain.Role;
 import b172.challenging.member.repository.MemberRepository;
 import b172.challenging.common.exception.CustomRuntimeException;
 import b172.challenging.common.exception.ErrorCode;
@@ -41,20 +42,21 @@ public class JwtService {
 
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
+    private static final String ROLE_CLAIM = "role";
     private static final String MEMBER_ID_CLAIM = "memberId";
     private static final String CODE_CLAIM = "code";
     private static final String BEARER = "Bearer ";
     private static final String AUTHORITIES_KEY = "authority";
-
     private final MemberRepository memberRepository;
 
 
-    public String createAccessToken(Long memberId) {
+    public String createAccessToken(Long memberId, Role role) {
         Date now = new Date();
         String jwtCode = saveRandomJwtCode(memberId);
         return JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(now.getTime() + accessTokenExpiration))
+                .withClaim(ROLE_CLAIM, String.valueOf(role))
                 .withClaim(MEMBER_ID_CLAIM, memberId)
                 .withClaim(CODE_CLAIM, jwtCode)
                 .sign(Algorithm.HMAC512(secretKey));
