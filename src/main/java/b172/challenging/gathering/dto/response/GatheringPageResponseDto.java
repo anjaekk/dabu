@@ -16,22 +16,4 @@ public record GatheringPageResponseDto(
         long totalElements,
         int totalPages,
         boolean last
-        ) {
-
-        @Builder
-        public static record AppTechPlatformDto(
-                AppTechPlatform[] appTechPlatform
         ) { }
-
-    @Builder
-    public static record OngoingGatheringResponseDto(
-            String title,
-            AppTechPlatform appTechPlatform,
-            LocalDateTime startDate,
-            LocalDateTime endDate,
-            int workingDays,
-            Long goalAmount,
-            List<GatheringMember> gatheringMembers
-    )
-    { }
-}

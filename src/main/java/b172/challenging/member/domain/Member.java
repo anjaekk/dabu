@@ -95,6 +95,11 @@ public class Member {
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     public boolean isNicknameChanged(String inputNickname) {
         return !nickname.equals(inputNickname);
     }

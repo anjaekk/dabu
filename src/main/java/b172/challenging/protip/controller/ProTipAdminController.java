@@ -1,6 +1,6 @@
 package b172.challenging.protip.controller;
 
-import b172.challenging.auth.domain.Role;
+import b172.challenging.member.domain.Role;
 import b172.challenging.auth.oauth.CustomOauth2User;
 import b172.challenging.protip.domain.ProTipType;
 import b172.challenging.protip.dto.ProTipEditResponseDto;

@@ -1,6 +1,6 @@
 package b172.challenging.protip.domain;
 
-import b172.challenging.auth.domain.Member;
+import b172.challenging.member.domain.Member;
 import b172.challenging.common.domain.UseYn;
 import b172.challenging.protip.dto.ProTipRequestDto;
 import io.swagger.v3.oas.annotations.media.Schema;
