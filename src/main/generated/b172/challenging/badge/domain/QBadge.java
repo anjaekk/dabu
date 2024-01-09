@@ -23,7 +23,11 @@ public class QBadge extends EntityPathBase<Badge> {
 
     public final StringPath description = createString("description");
 
+    public final StringPath hasImageUrl = createString("hasImageUrl");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final StringPath imageUrl = createString("imageUrl");
 
     public final StringPath name = createString("name");
 

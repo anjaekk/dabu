@@ -1,6 +1,6 @@
 package b172.challenging.gathering.domain;
 
-import b172.challenging.auth.domain.Member;
+import b172.challenging.member.domain.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -56,6 +56,9 @@ public class GatheringMember {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+//    @OneToMany(mappedBy = "gatheringMember", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+//    private List<GatheringSavingLog> gatheringSavingLog;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
@@ -71,6 +74,10 @@ public class GatheringMember {
 
     public void setStatus(GatheringMemberStatus status){
         this.status = status;
+    }
+
+    public GatheringMember(Long id){
+        this.id = id;
     }
 
 }

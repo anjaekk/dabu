@@ -1,6 +1,5 @@
 package b172.challenging.wallet.repository;
 
-import b172.challenging.wallet.domain.MaterialWallet;
 import b172.challenging.wallet.domain.Wallet;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;

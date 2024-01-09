@@ -32,11 +32,11 @@ public class QGatheringMember extends EntityPathBase<GatheringMember> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final DateTimePath<java.time.LocalDateTime> leavedAt = createDateTime("leavedAt", java.time.LocalDateTime.class);
-
-    public final b172.challenging.auth.domain.QMember member;
+    public final b172.challenging.member.domain.QMember member;
 
     public final EnumPath<GatheringMemberStatus> status = createEnum("status", GatheringMemberStatus.class);
+
+    public final DateTimePath<java.time.LocalDateTime> updatedAt = createDateTime("updatedAt", java.time.LocalDateTime.class);
 
     public QGatheringMember(String variable) {
         this(GatheringMember.class, forVariable(variable), INITS);
@@ -57,7 +57,7 @@ public class QGatheringMember extends EntityPathBase<GatheringMember> {
     public QGatheringMember(Class<? extends GatheringMember> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.gathering = inits.isInitialized("gathering") ? new QGathering(forProperty("gathering"), inits.get("gathering")) : null;
-        this.member = inits.isInitialized("member") ? new b172.challenging.auth.domain.QMember(forProperty("member")) : null;
+        this.member = inits.isInitialized("member") ? new b172.challenging.member.domain.QMember(forProperty("member")) : null;
     }
 
 }

@@ -1,6 +1,8 @@
 package b172.challenging.gathering.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +12,8 @@ import java.time.LocalDateTime;
 @Getter
 @Table(name = "gathering_saving_certification")
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class GatheringSavingCertification {
 
     @Id
@@ -30,5 +34,9 @@ public class GatheringSavingCertification {
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
+    }
+
+    public void setImageUrl(String imageUrl){
+        this.imageUrl = imageUrl;
     }
 }

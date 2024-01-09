@@ -1,11 +1,14 @@
 package b172.challenging.gathering.service;
 
-import b172.challenging.auth.domain.Member;
-import b172.challenging.auth.repository.MemberRepository;
+import b172.challenging.gathering.dto.OngoingGatheringResponseDto;
+import b172.challenging.gathering.dto.PendingGatheringResponseDto;
+import b172.challenging.member.domain.Member;
+import b172.challenging.member.repository.MemberRepository;
 import b172.challenging.common.exception.CustomRuntimeException;
 import b172.challenging.common.exception.ErrorCode;
 import b172.challenging.gathering.domain.*;
-import b172.challenging.gathering.dto.*;
+import b172.challenging.gathering.dto.request.GatheringMakeRequestDto;
+import b172.challenging.gathering.dto.response.*;
 import b172.challenging.gathering.repository.GatheringMemberRepository;
 import b172.challenging.gathering.repository.GatheringRepository;
 import lombok.RequiredArgsConstructor;
@@ -62,8 +65,8 @@ public class GatheringService {
                 .build();
     }
 
-    public GatheringMemberPageResponseDto findMyGatheringInProgress(Long userId, Pageable page) {
-        Page<GatheringMember> gatheringMembersPage = gatheringMemberRepository.findByMemberIdAndStatus(userId, GatheringMemberStatus.ONGOING, page);
+    public GatheringMemberPageResponseDto findMyGatheringInProgress(Long MemberId, Pageable page) {
+        Page<GatheringMember> gatheringMembersPage = gatheringMemberRepository.findByMemberIdAndStatus(MemberId, GatheringMemberStatus.ONGOING, page);
         List<GatheringMember> gatheringMembers  = new ArrayList<>(gatheringMembersPage.getContent());
         return GatheringMemberPageResponseDto.builder()
                 .gatheringMembers(gatheringMembers)
@@ -113,27 +116,48 @@ public class GatheringService {
                 .build();
     }
 
-    public GatheringStatusResponseDto findGatheringStatus(Long gatheringId, Long userId) {
+    public PendingGatheringResponseDto findPendingGathering(Long gatheringId, Long MemberId) {
         Optional<Gathering> gatheringOptional = gatheringRepository.findById(gatheringId);
         Gathering gathering = gatheringOptional.orElseThrow(() -> new CustomRuntimeException(ErrorCode.NOT_FOUND_MEMBER));
 
         List<GatheringMember> gatheringMemberList = gatheringMemberRepository.findByGatheringAndStatus(gathering, GatheringMemberStatus.ONGOING);
 
-        boolean isExist = gatheringMemberList.stream().anyMatch(gm -> gm.getMember().getId().equals(userId));
+        boolean isJoined = gatheringMemberList.stream().anyMatch(gm -> gm.getMember().getId().equals(MemberId));
 
-        return GatheringStatusResponseDto.builder()
+        return PendingGatheringResponseDto.builder()
                 .title(gathering.getTitle())
                 .gatheringStatus(gathering.getStatus())
                 .remainNum(gathering.getPeopleNum() - gatheringMemberList.size())
                 .appTechPlatform(gathering.getPlatform())
+                .startDate(gathering.getStartDate())
+                .endDate(gathering.getEndDate())
                 .workingDays(gathering.getWorkingDays())
                 .goalAmount(gathering.getGoalAmount())
-                .isExist(isExist)
+                .isJoined(isJoined)
                 .build();
     }
 
-    public JoinGatheringResponseDto joinGathering(Long userId, Long gatheringId) {
-        Member member = new Member(userId);
+    public OngoingGatheringResponseDto findOngoingGathering(Long gatheringId) {
+
+        Optional<Gathering> gatheringOptional = gatheringRepository.findById(gatheringId);
+        Gathering gathering = gatheringOptional.orElseThrow(() -> new CustomRuntimeException(ErrorCode.NOT_FOUND_MEMBER));
+
+        List<GatheringMember> gatheringMemberList = gatheringMemberRepository.findByGatheringAndStatus(gathering, GatheringMemberStatus.ONGOING);
+
+
+        return OngoingGatheringResponseDto.builder()
+                .title(gathering.getTitle())
+                .appTechPlatform(gathering.getPlatform())
+                .startDate(gathering.getStartDate())
+                .endDate(gathering.getEndDate())
+                .workingDays(gathering.getWorkingDays())
+                .goalAmount(gathering.getGoalAmount())
+                .gatheringMembers(gatheringMemberList)
+                .build();
+    }
+
+    public JoinGatheringResponseDto joinGathering(Long MemberId, Long gatheringId) {
+        Member member = new Member(MemberId);
         Gathering gathering = new Gathering(gatheringId);
         GatheringMember gatheringMember = GatheringMember.builder()
                 .member(member)
@@ -150,8 +174,8 @@ public class GatheringService {
     }
 
     @Transactional
-    public LeftGatheringResponseDto leftGathering(Long userId, Long gatheringMemberId) {
-        GatheringMember gatheringMember = gatheringMemberRepository.findByIdAndMemberId(gatheringMemberId, userId).orElseThrow(() -> new CustomRuntimeException(ErrorCode.NOT_FOUND_MEMBER));
+    public LeftGatheringResponseDto leftGathering(Long MemberId, Long gatheringMemberId) {
+        GatheringMember gatheringMember = gatheringMemberRepository.findByIdAndMemberId(gatheringMemberId, MemberId).orElseThrow(() -> new CustomRuntimeException(ErrorCode.NOT_FOUND_MEMBER));
 
         gatheringMember.setStatus(GatheringMemberStatus.PARTIALLY_LEFT);
 
@@ -159,6 +183,21 @@ public class GatheringService {
 
         return LeftGatheringResponseDto.builder()
                 .gatheringMember(gatheringMember)
+                .build();
+    }
+  
+    public GatheringStatusCountResponseDto gatheringStatusCount(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() ->  new CustomRuntimeException(ErrorCode.NOT_FOUND_MEMBER));
+
+        Long onGoingCount = gatheringMemberRepository.countByMemberIdAndStatus(memberId, GatheringMemberStatus.ONGOING);
+        Long completedCount = gatheringMemberRepository.countByMemberIdAndStatus(memberId, GatheringMemberStatus.COMPLETED);
+        Long ownerGatheringCount = gatheringRepository.countByOwnerMember(member);
+
+        return GatheringStatusCountResponseDto.builder()
+                .onGoingCount(onGoingCount)
+                .completedCount(completedCount)
+                .ownerGatheringCount(ownerGatheringCount)
                 .build();
     }
 }

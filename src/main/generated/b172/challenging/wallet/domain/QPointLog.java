@@ -26,7 +26,7 @@ public class QPointLog extends EntityPathBase<PointLog> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final b172.challenging.auth.domain.QMember member;
+    public final b172.challenging.member.domain.QMember member;
 
     public final NumberPath<Long> point = createNumber("point", Long.class);
 
@@ -52,7 +52,7 @@ public class QPointLog extends EntityPathBase<PointLog> {
 
     public QPointLog(Class<? extends PointLog> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.member = inits.isInitialized("member") ? new b172.challenging.auth.domain.QMember(forProperty("member")) : null;
+        this.member = inits.isInitialized("member") ? new b172.challenging.member.domain.QMember(forProperty("member")) : null;
     }
 
 }

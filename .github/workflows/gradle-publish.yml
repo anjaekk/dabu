@@ -14,8 +14,8 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  development-deploy:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -41,6 +41,7 @@ jobs:
           cd ./src/main/resources
           # touch ./application.yml
           echo "${{ secrets.YML }}" > ./application-security.yml
+          echo "${{ secrets.PROD_YML }}" > ./application-prod.yml
       shell: bash	
 
     # gradle을 통해 소스를 빌드.
@@ -61,7 +62,7 @@ jobs:
     # appleboy/ssh-action@master 액션을 사용하여 지정한 서버에 ssh로 접속하고, script를 실행합니다.
     # script의 내용은 도커의 기존 프로세스들을 제거하고, docker repo로부터 방금 위에서 push한 내용을 pull 받아 실행하는 것입니다. 
     # 실행 시, docker-compose를 사용합니다.
-    - name: Deploy to server
+    - name: Deploy to Development Server
       uses: appleboy/ssh-action@master
       id: deploy
       with:
@@ -75,4 +76,26 @@ jobs:
           docker pull ${{ secrets.DOCKER_REPO }}/bside-17-2-back
           docker-compose up -d
           docker image prune -f
-    
+
+  production-deploy:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Deploy to Production Server
+        uses: appleboy/ssh-action@master
+        id: deploy
+        with:
+          host: ${{ secrets.PROD_DEPLOYMENT_HOST }}
+          username: ${{ secrets.PROD_DEPLOYMENT_USERNAME }}
+          password: ${{ secrets.PROD_DEPLOYMENT_PASSWORD }}
+          port: ${{ secrets.PROD_DEPLOYMENT_PORT }}
+          # envs: GITHUB_SHA
+          script: |
+            docker rm -f $(docker ps -qa)
+            docker pull ${{ secrets.DOCKER_REPO }}/bside-17-2-back
+            docker-compose up -d
+            docker image prune -f

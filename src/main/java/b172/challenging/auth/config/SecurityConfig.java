@@ -1,18 +1,17 @@
 package b172.challenging.auth.config;
 
-import b172.challenging.auth.domain.Role;
 import b172.challenging.auth.oauth.CustomAuthenticationEntryPoint;
-import b172.challenging.auth.repository.MemberRepository;
 import b172.challenging.auth.oauth.filter.JwtAuthenticationFilter;
 import b172.challenging.auth.oauth.handler.Oauth2LoginFailureHandler;
 import b172.challenging.auth.oauth.handler.Oauth2LoginSuccessHandler;
 import b172.challenging.auth.service.CustomOauthService;
-import b172.challenging.auth.service.JwtService;
+import io.swagger.v3.oas.models.PathItem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -29,8 +28,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtService jwtService;
-    private final MemberRepository memberRepository;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomOauthService customOauthService;
     private final Oauth2LoginSuccessHandler oauth2LoginSuccessHandler;
     private final Oauth2LoginFailureHandler oauth2LoginFailureHandler;
@@ -66,7 +64,8 @@ public class SecurityConfig {
                                 , new AntPathRequestMatcher("/example/**")
                                 , new AntPathRequestMatcher("/error/**")
                         ).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/v1/members/profile")).hasAnyRole("MEMBER", "ADMIN")
+                        .requestMatchers(new AntPathRequestMatcher("/v1/members/profile")).hasAnyRole("GUEST", "MEMBER", "ADMIN")
+                        .requestMatchers(new AntPathRequestMatcher("/v1/**")).hasAnyRole("MEMBER", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .oauth2Login((oauth2) -> oauth2
@@ -78,23 +77,8 @@ public class SecurityConfig {
                 .exceptionHandling((exceptionHandling) ->
                         exceptionHandling.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 );
-        http.addFilterAfter(jwtAuthenticationFilter(), OAuth2LoginAuthenticationFilter.class);
+        http.addFilterAfter(jwtAuthenticationFilter, OAuth2LoginAuthenticationFilter.class);
         return http.build();
-    }
-
-    @Bean
-    public Oauth2LoginSuccessHandler loginSuccessHandler() {
-        return new Oauth2LoginSuccessHandler(jwtService, customOauthService);
-    }
-
-    @Bean
-    public Oauth2LoginFailureHandler loginFailureHandler() {
-        return new Oauth2LoginFailureHandler();
-    }
-
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtService, memberRepository);
     }
 
 }

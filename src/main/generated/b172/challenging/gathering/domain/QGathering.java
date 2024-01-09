@@ -26,11 +26,13 @@ public class QGathering extends EntityPathBase<Gathering> {
 
     public final DateTimePath<java.time.LocalDateTime> endDate = createDateTime("endDate", java.time.LocalDateTime.class);
 
+    public final ListPath<GatheringMember, QGatheringMember> gatheringMembers = this.<GatheringMember, QGatheringMember>createList("gatheringMembers", GatheringMember.class, QGatheringMember.class, PathInits.DIRECT2);
+
     public final NumberPath<Long> goalAmount = createNumber("goalAmount", Long.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final b172.challenging.auth.domain.QMember ownerMember;
+    public final b172.challenging.member.domain.QMember ownerMember;
 
     public final NumberPath<Integer> peopleNum = createNumber("peopleNum", Integer.class);
 
@@ -64,7 +66,7 @@ public class QGathering extends EntityPathBase<Gathering> {
 
     public QGathering(Class<? extends Gathering> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.ownerMember = inits.isInitialized("ownerMember") ? new b172.challenging.auth.domain.QMember(forProperty("ownerMember")) : null;
+        this.ownerMember = inits.isInitialized("ownerMember") ? new b172.challenging.member.domain.QMember(forProperty("ownerMember")) : null;
     }
 
 }

@@ -1,10 +1,11 @@
 package b172.challenging.auth.service;
 
-import b172.challenging.auth.repository.MemberRepository;
-import b172.challenging.auth.domain.Member;
-import b172.challenging.auth.domain.OauthProvider;
+import b172.challenging.member.repository.MemberRepository;
+import b172.challenging.member.domain.Member;
+import b172.challenging.member.domain.OauthProvider;
 import b172.challenging.auth.oauth.CustomOauth2User;
 import b172.challenging.auth.oauth.OauthAttributes;
+import b172.challenging.member.service.MemberNicknameService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
