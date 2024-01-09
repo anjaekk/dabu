@@ -35,6 +35,7 @@ public class SecurityConfig {
 
 
     @Bean
+    @Profile(value = {"local","dev"})
     public WebSecurityCustomizer configureH2ConsoleEnable() {
         return (web) -> web.ignoring()
                 .requestMatchers(PathRequest.toH2Console());
