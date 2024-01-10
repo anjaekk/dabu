@@ -177,15 +177,15 @@ public class GatheringController {
         return ResponseEntity.ok(gatheringSavingLogService.updateGatheringSavingLog(memberId, savingLogId, gatheringSavingLogRequestDto));
     }
 
-    @GetMapping("/status-count")
-    @Operation(summary = "모임 현황 개수", description = "참가중, 완료, 내가 만든 모임 개수를 반환합니다.")
+    @GetMapping("/statistics")
+    @Operation(summary = "모임 현황 개수", description = "참가중, 완료, 내가 만든 모임 개수, 달성률을 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공",
-                    content = {@Content(schema = @Schema(implementation = GatheringStatusCountResponseDto.class))}),
+                    content = {@Content(schema = @Schema(implementation = GatheringStatisticsResponseDto.class))}),
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자 입니다."),
     })
-    public ResponseEntity<GatheringStatusCountResponseDto> getGatheringStatusCount(Principal principal) {
+    public ResponseEntity<GatheringStatisticsResponseDto> getGatheringStatistics(Principal principal) {
         Long memberId = Long.parseLong(principal.getName());
-        return ResponseEntity.ok(gatheringService.gatheringStatusCount(memberId));
+        return ResponseEntity.ok(gatheringService.gatheringStatistics(memberId));
     }
 }
