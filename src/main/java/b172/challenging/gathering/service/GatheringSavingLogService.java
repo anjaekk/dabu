@@ -8,8 +8,6 @@ import b172.challenging.gathering.domain.GatheringSavingLog;
 import b172.challenging.gathering.dto.GatheringSavingLogCertificateResponseDto;
 import b172.challenging.gathering.dto.GatheringSavingLogResponseDto;
 import b172.challenging.gathering.dto.request.GatheringSavingLogRequestDto;
-import b172.challenging.gathering.dto.response.GatheringStatusCountResponseDto;
-import b172.challenging.gathering.dto.response.GatheringStatusResponseDto;
 import b172.challenging.gathering.repository.GatheringSavingCertificationRepository;
 import b172.challenging.gathering.repository.GatheringSavingLogRepository;
 import b172.challenging.wallet.domain.Wallet;

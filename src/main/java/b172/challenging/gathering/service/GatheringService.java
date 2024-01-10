@@ -2,6 +2,7 @@ package b172.challenging.gathering.service;
 
 import b172.challenging.gathering.dto.OngoingGatheringResponseDto;
 import b172.challenging.gathering.dto.PendingGatheringResponseDto;
+import b172.challenging.gathering.repository.GatheringMemberCustomRepository;
 import b172.challenging.member.domain.Member;
 import b172.challenging.member.repository.MemberRepository;
 import b172.challenging.common.exception.CustomRuntimeException;
@@ -26,6 +27,7 @@ import java.util.Optional;
 public class GatheringService {
     private final GatheringRepository gatheringRepository;
     private final GatheringMemberRepository gatheringMemberRepository;
+    private final GatheringMemberCustomRepository gatheringMemberCustomRepository;
     private final MemberRepository memberRepository;
 
     public GatheringPageResponseDto findGatheringByPlatform (AppTechPlatform platform, GatheringStatus status, Pageable page){
@@ -185,19 +187,31 @@ public class GatheringService {
                 .gatheringMember(gatheringMember)
                 .build();
     }
-  
-    public GatheringStatusCountResponseDto gatheringStatusCount(Long memberId) {
+
+    public Double getAchievementRate(Member member) {
+
+        Integer totalSaving = gatheringMemberCustomRepository.gatheringMemberCountSum(member);
+        Integer totalWorkingDays = gatheringMemberCustomRepository.gatheringMemberWorkingDaysSum(member);
+        if (totalSaving != null && totalWorkingDays != null && totalWorkingDays != 0) {
+            return (double) totalSaving / totalWorkingDays * 100;
+        }
+        return (double) 0.0;
+    }
+
+    public GatheringStatisticsResponseDto gatheringStatistics(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() ->  new CustomRuntimeException(ErrorCode.NOT_FOUND_MEMBER));
 
         Long onGoingCount = gatheringMemberRepository.countByMemberIdAndStatus(memberId, GatheringMemberStatus.ONGOING);
         Long completedCount = gatheringMemberRepository.countByMemberIdAndStatus(memberId, GatheringMemberStatus.COMPLETED);
         Long ownerGatheringCount = gatheringRepository.countByOwnerMember(member);
+        Double achievementRate = getAchievementRate(member);
 
-        return GatheringStatusCountResponseDto.builder()
+        return GatheringStatisticsResponseDto.builder()
                 .onGoingCount(onGoingCount)
                 .completedCount(completedCount)
                 .ownerGatheringCount(ownerGatheringCount)
+                .achievementRate(achievementRate)
                 .build();
     }
 }
