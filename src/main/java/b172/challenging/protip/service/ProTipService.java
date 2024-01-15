@@ -4,7 +4,7 @@ import b172.challenging.member.domain.Member;
 import b172.challenging.member.domain.Role;
 import b172.challenging.common.domain.UseYn;
 import b172.challenging.common.exception.CustomRuntimeException;
-import b172.challenging.common.exception.ErrorCode;
+import b172.challenging.common.exception.Exceptions;
 import b172.challenging.protip.domain.ProTip;
 import b172.challenging.protip.domain.ProTipType;
 import b172.challenging.protip.dto.ProTipEditResponseDto;
@@ -89,7 +89,7 @@ public class ProTipService {
     public ProTipEditResponseDto postProTip(Long proTipId, Long memberId, ProTipRequestDto requestDto) {
         Member member = new Member(memberId);
 
-        ProTip proTip = proTipRepository.findById(proTipId).orElseThrow(() -> new CustomRuntimeException(ErrorCode.NOT_FOUND_MEMBER));
+        ProTip proTip = proTipRepository.findById(proTipId).orElseThrow(() -> new CustomRuntimeException(Exceptions.NOT_FOUND_MEMBER));
 
         proTip.setContent(member, requestDto);
 

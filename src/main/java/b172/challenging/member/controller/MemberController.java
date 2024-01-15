@@ -6,7 +6,7 @@ import b172.challenging.member.dto.response.MemberProfileResponseDto;
 import b172.challenging.member.repository.MemberRepository;
 import b172.challenging.member.service.MemberService;
 import b172.challenging.common.exception.CustomRuntimeException;
-import b172.challenging.common.exception.ErrorCode;
+import b172.challenging.common.exception.Exceptions;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -42,7 +42,7 @@ public class MemberController {
     public ResponseEntity<MemberProfileResponseDto> getMemberProfile(Principal principal) {
         Long memberId = Long.parseLong(principal.getName());
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() ->  new CustomRuntimeException(ErrorCode.NOT_FOUND_MEMBER));
+                .orElseThrow(() ->  new CustomRuntimeException(Exceptions.NOT_FOUND_MEMBER));
         return ResponseEntity.ok(MemberProfileResponseDto.of(member));
     }
 
