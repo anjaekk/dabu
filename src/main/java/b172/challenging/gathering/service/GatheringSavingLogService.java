@@ -1,7 +1,7 @@
 package b172.challenging.gathering.service;
 
 import b172.challenging.common.exception.CustomRuntimeException;
-import b172.challenging.common.exception.ErrorCode;
+import b172.challenging.common.exception.Exceptions;
 import b172.challenging.gathering.domain.GatheringMember;
 import b172.challenging.gathering.domain.GatheringSavingCertification;
 import b172.challenging.gathering.domain.GatheringSavingLog;
@@ -28,7 +28,7 @@ public class GatheringSavingLogService {
     public GatheringSavingLogResponseDto findGatheringSavingLog(Long savingLogId){
         GatheringSavingLog gatheringSavingLog = gatheringSavingLogRepository
                         .findById(savingLogId)
-                        .orElseThrow(() -> new CustomRuntimeException(ErrorCode.NOT_FOUND_MEMBER));
+                        .orElseThrow(() -> new CustomRuntimeException(Exceptions.NOT_FOUND_MEMBER));
 
         return GatheringSavingLogResponseDto.builder()
                 .gatheringSavingLog(gatheringSavingLog)
@@ -52,7 +52,7 @@ public class GatheringSavingLogService {
                         .build()
         );
 
-        Wallet wallet = walletRepository.findByMemberId(memberId).orElseThrow(() -> new CustomRuntimeException(ErrorCode.NOT_FOUND_MEMBER));
+        Wallet wallet = walletRepository.findByMemberId(memberId).orElseThrow(() -> new CustomRuntimeException(Exceptions.NOT_FOUND_MEMBER));
         wallet.savePoint(gatheringSavingLogRequestDto.amount());
         walletRepository.save(wallet);
 
@@ -65,14 +65,14 @@ public class GatheringSavingLogService {
     @Transactional
     public GatheringSavingLogCertificateResponseDto updateGatheringSavingLog(Long memberId, Long savingLogId, GatheringSavingLogRequestDto gatheringSavingLogRequestDto) {
 
-        GatheringSavingLog gatheringSavingLog = gatheringSavingLogRepository.findById(savingLogId).orElseThrow(() -> new CustomRuntimeException(ErrorCode.NOT_FOUND_MEMBER));
+        GatheringSavingLog gatheringSavingLog = gatheringSavingLogRepository.findById(savingLogId).orElseThrow(() -> new CustomRuntimeException(Exceptions.NOT_FOUND_MEMBER));
 
         gatheringSavingLog.setAmount(gatheringSavingLogRequestDto.amount());
 
-        Wallet wallet = walletRepository.findByMemberId(memberId).orElseThrow(() -> new CustomRuntimeException(ErrorCode.NOT_FOUND_MEMBER));
+        Wallet wallet = walletRepository.findByMemberId(memberId).orElseThrow(() -> new CustomRuntimeException(Exceptions.NOT_FOUND_MEMBER));
         wallet.savePoint(gatheringSavingLogRequestDto.amount() - gatheringSavingLog.getAmount() + gatheringSavingLogRequestDto.amount());
 
-        GatheringSavingCertification gatheringSavingCertification = gatheringSavingCertificationRepository.findByGatheringSavingLog(gatheringSavingLog).orElseThrow(() -> new CustomRuntimeException(ErrorCode.NOT_FOUND_MEMBER));
+        GatheringSavingCertification gatheringSavingCertification = gatheringSavingCertificationRepository.findByGatheringSavingLog(gatheringSavingLog).orElseThrow(() -> new CustomRuntimeException(Exceptions.NOT_FOUND_MEMBER));
         gatheringSavingCertification.setImageUrl(gatheringSavingLogRequestDto.imgUrl());
 
         return GatheringSavingLogCertificateResponseDto.builder()

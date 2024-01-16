@@ -1,7 +1,7 @@
 package b172.challenging.wallet.service;
 
 import b172.challenging.common.exception.CustomRuntimeException;
-import b172.challenging.common.exception.ErrorCode;
+import b172.challenging.common.exception.Exceptions;
 import b172.challenging.wallet.domain.MaterialWallet;
 import b172.challenging.wallet.domain.Wallet;
 import b172.challenging.wallet.dto.MaterialWalletResponseDto;
@@ -33,13 +33,13 @@ public class WalletService {
                 .saveAmount(wallet.getSaveAmount())
                 .homeUpdatedAt(wallet.getHomeUpdatedAt())
                 .build())
-                .orElseThrow(() -> new CustomRuntimeException(ErrorCode.NOT_FOUND_MEMBER));
+                .orElseThrow(() -> new CustomRuntimeException(Exceptions.NOT_FOUND_MEMBER));
     }
 
     public MaterialWalletResponseDto findMyMaterialWallet (Long id){
         List<MaterialWallet> materialWalletList = materialWalletRepository.findByMemberId(id);
         if(materialWalletList.isEmpty()) {
-            throw new CustomRuntimeException(ErrorCode.NOT_FOUND_MEMBER);
+            throw new CustomRuntimeException(Exceptions.NOT_FOUND_MEMBER);
         }
 
         return MaterialWalletResponseDto

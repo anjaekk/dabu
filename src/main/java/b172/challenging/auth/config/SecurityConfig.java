@@ -1,18 +1,15 @@
 package b172.challenging.auth.config;
 
-import b172.challenging.auth.oauth.CustomAuthenticationEntryPoint;
 import b172.challenging.auth.oauth.filter.JwtAuthenticationFilter;
 import b172.challenging.auth.oauth.handler.Oauth2LoginFailureHandler;
 import b172.challenging.auth.oauth.handler.Oauth2LoginSuccessHandler;
 import b172.challenging.auth.service.CustomOauthService;
-import io.swagger.v3.oas.models.PathItem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -33,7 +30,6 @@ public class SecurityConfig {
     private final CustomOauthService customOauthService;
     private final Oauth2LoginSuccessHandler oauth2LoginSuccessHandler;
     private final Oauth2LoginFailureHandler oauth2LoginFailureHandler;
-
 
     @Bean
     @Profile(value = {"local","dev"})
@@ -75,9 +71,6 @@ public class SecurityConfig {
                         .failureHandler(oauth2LoginFailureHandler)
                         .userInfoEndpoint((userInfoEndpoint -> userInfoEndpoint
                                 .userService(customOauthService)))
-                )
-                .exceptionHandling((exceptionHandling) ->
-                        exceptionHandling.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 );
         http.addFilterAfter(jwtAuthenticationFilter, OAuth2LoginAuthenticationFilter.class);
         return http.build();

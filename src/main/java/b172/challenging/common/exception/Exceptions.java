@@ -1,10 +1,7 @@
 package b172.challenging.common.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-
-public enum ErrorCode {
+public enum Exceptions {
 
     INVALID_REQUEST(400, "1001", "올바르지 않은 요청입니다."),
     UNAUTHORIZED(401, "1002", "인증되지 않은 사용자 입니다."),
@@ -16,18 +13,18 @@ public enum ErrorCode {
     private final String errorCode;
     private final String message;
 
-    ErrorCode(int statusCode, String errorCode, String message) {
+    Exceptions(int statusCode, String errorCode, String message) {
         this.statusCode = statusCode;
         this.errorCode = errorCode;
         this.message = message;
     }
 
     public int getStatusCode() {
-        return this.statusCode;
+        return statusCode;
     }
 
     public String getErrorCode() {
-        return this.errorCode;
+        return errorCode;
     }
 
     public String getMessage() {
