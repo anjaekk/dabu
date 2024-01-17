@@ -35,9 +35,17 @@ public class Gathering {
     @Schema(description = "앱 플랫폼")
     private AppTechPlatform platform;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "gathering_image_id")
+    @Schema(description = "모임 이미지 Id")
+    private GatheringImage gatheringImage;
+
     @Column(nullable = false)
     @Schema(description = "모임 제목")
     private String title;
+
+    @Schema(description = "모임 설명")
+    private String description;
 
     @Column(name = "people_num", nullable = false)
     @Schema(description = "모집 할 인원 수")

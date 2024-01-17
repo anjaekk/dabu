@@ -3,10 +3,10 @@ package b172.challenging.gathering.controller;
 
 import b172.challenging.gathering.domain.AppTechPlatform;
 import b172.challenging.gathering.domain.GatheringStatus;
-import b172.challenging.gathering.dto.GatheringSavingLogCertificateResponseDto;
-import b172.challenging.gathering.dto.GatheringSavingLogResponseDto;
-import b172.challenging.gathering.dto.OngoingGatheringResponseDto;
-import b172.challenging.gathering.dto.PendingGatheringResponseDto;
+import b172.challenging.gathering.dto.response.GatheringSavingLogCertificateResponseDto;
+import b172.challenging.gathering.dto.response.GatheringSavingLogResponseDto;
+import b172.challenging.gathering.dto.response.OngoingGatheringResponseDto;
+import b172.challenging.gathering.dto.response.PendingGatheringResponseDto;
 import b172.challenging.gathering.dto.request.GatheringMakeRequestDto;
 import b172.challenging.gathering.dto.request.GatheringSavingLogRequestDto;
 import b172.challenging.gathering.dto.response.*;
