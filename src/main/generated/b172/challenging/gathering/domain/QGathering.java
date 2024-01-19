@@ -24,7 +24,11 @@ public class QGathering extends EntityPathBase<Gathering> {
 
     public final DateTimePath<java.time.LocalDateTime> createdAt = createDateTime("createdAt", java.time.LocalDateTime.class);
 
+    public final StringPath description = createString("description");
+
     public final DateTimePath<java.time.LocalDateTime> endDate = createDateTime("endDate", java.time.LocalDateTime.class);
+
+    public final QGatheringImage gatheringImage;
 
     public final ListPath<GatheringMember, QGatheringMember> gatheringMembers = this.<GatheringMember, QGatheringMember>createList("gatheringMembers", GatheringMember.class, QGatheringMember.class, PathInits.DIRECT2);
 
@@ -66,6 +70,7 @@ public class QGathering extends EntityPathBase<Gathering> {
 
     public QGathering(Class<? extends Gathering> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.gatheringImage = inits.isInitialized("gatheringImage") ? new QGatheringImage(forProperty("gatheringImage")) : null;
         this.ownerMember = inits.isInitialized("ownerMember") ? new b172.challenging.member.domain.QMember(forProperty("ownerMember")) : null;
     }
 

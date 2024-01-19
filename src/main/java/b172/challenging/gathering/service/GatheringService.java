@@ -1,7 +1,8 @@
 package b172.challenging.gathering.service;
 
-import b172.challenging.gathering.dto.OngoingGatheringResponseDto;
-import b172.challenging.gathering.dto.PendingGatheringResponseDto;
+import b172.challenging.gathering.dto.response.OngoingGatheringResponseDto;
+import b172.challenging.gathering.dto.response.PendingGatheringResponseDto;
+import b172.challenging.gathering.repository.GatheringImageRepository;
 import b172.challenging.gathering.repository.GatheringMemberCustomRepository;
 import b172.challenging.member.domain.Member;
 import b172.challenging.member.repository.MemberRepository;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +30,7 @@ public class GatheringService {
     private final GatheringRepository gatheringRepository;
     private final GatheringMemberRepository gatheringMemberRepository;
     private final GatheringMemberCustomRepository gatheringMemberCustomRepository;
+    private final GatheringImageRepository gatheringImageRepository;
     private final MemberRepository memberRepository;
 
     public GatheringPageResponseDto findGatheringByPlatform (AppTechPlatform platform, GatheringStatus status, Pageable page){
@@ -80,15 +83,30 @@ public class GatheringService {
                 .build();
     }
 
+    private GatheringImage generateGatheringImage() {
+        List<GatheringImage> allImages = gatheringImageRepository.findAll();
+        if (allImages == null || allImages.isEmpty()) {
+            throw new CustomRuntimeException(Exceptions.NOT_FOUND_IMAGE);
+        }
+
+        Random random = new Random();
+        int randomIndex = random.nextInt(allImages.size());
+
+        return allImages.get(randomIndex);
+    }
+
+
     @Transactional
     public GatheringMakeResponseDto makeGathering(Long memberId, GatheringMakeRequestDto gatheringMakeRequestDto) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomRuntimeException(Exceptions.NOT_FOUND_MEMBER));
-
+        GatheringImage gatheringImage = generateGatheringImage();
         Gathering gathering = Gathering.builder()
                  .ownerMember(member)
                 .platform(gatheringMakeRequestDto.appTechPlatform())
+                .gatheringImage(gatheringImage)
                 .title(gatheringMakeRequestDto.title())
+                .description(gatheringMakeRequestDto.description())
                 .peopleNum(gatheringMakeRequestDto.peopleNum())
                 .workingDays(gatheringMakeRequestDto.workingDays())
                 .goalAmount(gatheringMakeRequestDto.goalAmount())
@@ -128,9 +146,11 @@ public class GatheringService {
 
         return PendingGatheringResponseDto.builder()
                 .title(gathering.getTitle())
+                .description(gathering.getDescription())
                 .gatheringStatus(gathering.getStatus())
                 .remainNum(gathering.getPeopleNum() - gatheringMemberList.size())
                 .appTechPlatform(gathering.getPlatform())
+                .gatheringImage(GatheringImageResponseDto.of(gathering.getGatheringImage()).url())
                 .startDate(gathering.getStartDate())
                 .endDate(gathering.getEndDate())
                 .workingDays(gathering.getWorkingDays())
@@ -149,7 +169,9 @@ public class GatheringService {
 
         return OngoingGatheringResponseDto.builder()
                 .title(gathering.getTitle())
+                .description(gathering.getDescription())
                 .appTechPlatform(gathering.getPlatform())
+                .gatheringImage(GatheringImageResponseDto.of(gathering.getGatheringImage()).url())
                 .startDate(gathering.getStartDate())
                 .endDate(gathering.getEndDate())
                 .workingDays(gathering.getWorkingDays())
