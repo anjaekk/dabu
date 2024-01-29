@@ -69,13 +69,14 @@ public class SecurityConfig {
         
         List<String> corsList = List.of(corsUrl.split(","));
 
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedHeaders(Collections.singletonList("*"));
-        config.setAllowedMethods(Collections.singletonList("*"));
-        config.setAllowedOriginPatterns(corsList); // ⭐️ 허용할 origin
-        config.setAllowCredentials(true);
-
-        return config;
+        return request -> {
+            CorsConfiguration config = new CorsConfiguration();
+            config.setAllowedHeaders(Collections.singletonList("*"));
+            config.setAllowedMethods(Collections.singletonList("*"));
+            config.setAllowedOriginPatterns(corsList); // ⭐️ 허용할 origin
+            config.setAllowCredentials(true);
+            return config;
+        }
     }
     
     @Bean
