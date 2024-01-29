@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 
-@Tag(name = "함께 모으기 API", description = "함께 모으기 (홈 화면) API")
+@Tag(name = "월렛 API", description = "사용자 월렛(포인트, 나의 집 재료) 관련 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/wallet")
