@@ -51,7 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String refreshToken = jwtService.extractRefreshToken(request)
                     .filter(jwtService::verifyToken)
                     .orElse(null);
-            /*
+            /**
              * refresh token 전송시 access, refresh token 모두 재발급
              */
             if (refreshToken != null) {
@@ -96,7 +96,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String tokenJwtCode = jwtService.extractJwtCode(refreshToken);
         if (!tokenJwtCode.equals(storedJwtCode)) {
-            throw new CustomRuntimeException(Exceptions.UNAUTHORIZED);
+            new CustomRuntimeException(Exceptions.UNAUTHORIZED);
         }
         jwtService.sendAccessAndRefreshToken(
                 response, jwtService.createAccessToken(memberId, member.getRole()), jwtService.createRefreshToken(memberId)

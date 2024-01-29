@@ -1,6 +1,7 @@
 package b172.challenging.member.domain;
 
 import b172.challenging.gathering.domain.GatheringMember;
+import b172.challenging.wallet.domain.MaterialWallet;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -57,12 +58,12 @@ public class Member {
 
     @Column(name = "leaved_at")
     private LocalDateTime leavedAt;
-  
-//    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
-//    private Wallet wallet;
 
-    @OneToMany(mappedBy = "member", cascade = { CascadeType.PERSIST , CascadeType.MERGE })
+    @OneToMany(mappedBy = "member", cascade = { CascadeType.ALL })
     private List<GatheringMember> gatheringMembers;
+
+    @OneToMany(mappedBy = "member", cascade = { CascadeType.ALL })
+    private List<MaterialWallet> materialWallets;
 
     @PrePersist
     protected void onCreate() {
@@ -84,8 +85,8 @@ public class Member {
         this.isLeaved = false;
     }
 
-    public Member(Long userId){
-        this.id = userId;
+    public Member(Long memberId){
+        this.id = memberId;
     }
 
     public void setJwtCode(String jwtCode) {
