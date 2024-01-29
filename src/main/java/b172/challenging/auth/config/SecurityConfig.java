@@ -37,6 +37,7 @@ public class SecurityConfig {
     private final Oauth2LoginSuccessHandler oauth2LoginSuccessHandler;
     private final Oauth2LoginFailureHandler oauth2LoginFailureHandler;
 
+
     @Value("${spring.profiles.active}")
     private String activeProfile;
 
@@ -48,6 +49,7 @@ public class SecurityConfig {
 
     @Value("${app.cors.allowedOrigins.prod}")
     private String corsProd;
+
     @Bean
     @Profile(value = {"local","dev"})
     public WebSecurityCustomizer configureH2ConsoleEnable() {
@@ -58,23 +60,24 @@ public class SecurityConfig {
     // ⭐️ CORS 설정
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
+    
         String corsUrl = switch (activeProfile) {
             case "dev" -> corsDev;
             case "prod" -> corsProd;
             default -> corsLocal;
         };
+        
         List<String> corsList = List.of(corsUrl.split(","));
 
-        return request -> {
-            CorsConfiguration config = new CorsConfiguration();
-            config.setAllowedHeaders(Collections.singletonList("*"));
-            config.setAllowedMethods(Collections.singletonList("*"));
-            config.setAllowedOriginPatterns(corsList); // ⭐️ 허용할 origin
-            config.setAllowCredentials(true);
-            return config;
-        };
-    }
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedHeaders(Collections.singletonList("*"));
+        config.setAllowedMethods(Collections.singletonList("*"));
+        config.setAllowedOriginPatterns(corsList); // ⭐️ 허용할 origin
+        config.setAllowCredentials(true);
 
+        return config;
+    }
+    
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
