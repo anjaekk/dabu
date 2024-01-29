@@ -76,7 +76,7 @@ public class SecurityConfig {
             config.setAllowedOriginPatterns(corsList); // ⭐️ 허용할 origin
             config.setAllowCredentials(true);
             return config;
-        }
+        };
     }
     
     @Bean
