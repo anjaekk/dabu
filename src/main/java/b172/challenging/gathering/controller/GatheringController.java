@@ -173,8 +173,8 @@ public class GatheringController {
             @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자 입니다."),
     })
     public ResponseEntity<GatheringSavingLogCertificateResponseDto> modifyGatheringSavingLog(@PathVariable Long savingLogId,
-                                                                                                                             @RequestBody @Valid GatheringSavingLogRequestDto gatheringSavingLogRequestDto,
-                                                                                                                             Principal principal){
+                                                                                             @RequestBody @Valid GatheringSavingLogRequestDto gatheringSavingLogRequestDto,
+                                                                                             Principal principal){
 
         Long memberId = Long.parseLong(principal.getName());
 

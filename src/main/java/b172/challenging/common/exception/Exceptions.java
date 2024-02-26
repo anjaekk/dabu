@@ -20,6 +20,7 @@ public enum Exceptions {
     NOT_FOUND_GATHERING_SAVING_CERTIFICATION(404,"3204","저장된 포인트 인증이 없습니다."),
     NOT_FOUND_GATHERING_SAVING_LOG(404,"3304","저장된 포인트 인증 상세 정보가 없습니다."),
     NOT_FOUND_IMAGE(404, "3404", "저장된 모임 이미지가 없습니다."),
+    NOT_UPLOAD_IMAGE(404, "3405", "이미지 업로드에 실패하였습니다."),
 
 
     NOT_FOUND_WALLET(404,"4004","저장된 포인트를 찾을 수 없습니다."),
